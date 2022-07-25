@@ -50,12 +50,12 @@ const storeCount = ref(0)
 const unlockContent = ref(0)
 
 onMounted(()=>{
-  emitter.on('unlock',()=>{
+  emitter.on('getmessage',()=>{
     unlockContent.value ++
   })
 })
 onBeforeUnmount(()=>{
-  emitter.off('unlock')
+  emitter.off('getmessage')
 })
 </script>
 

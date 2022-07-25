@@ -82,7 +82,7 @@ export default {
       return store.state.bag.bagOn;
     });
     watch(active, (newValue) => {
-      console.log(newValue);
+      console.log(newValue,"asdf");
     });
     
     const keys = store.state.bag.keys;

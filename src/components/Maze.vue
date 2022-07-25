@@ -61,7 +61,7 @@ import Bag from "./main/bag.vue";
 import Phone from "./main/phone.vue";
 import Character from "./character.vue";
 import Characters from "./characters.vue";
-import Challenge from './challenge/challenge.vue'
+import Challenge from "./challenge/challenge.vue";
 
 const store = useStore();
 const router = useRouter();
@@ -70,6 +70,7 @@ const router = useRouter();
 store.dispatch("testToken", localStorage.getItem("token")).then(({ code }) => {
   console.log(code);
   if (code != 200) {
+    console.log("需要跳转");
     router.replace({
       name: "main",
     });
@@ -81,32 +82,33 @@ const mapOn = ref(true);
 const getKey = (key) => {
   store.commit("GETKEY", key);
 };
+const times = reactive(new Set());
 const getMessage = () => {
+  //清除times
+  clearTimes()
+
   //手机收到消息 一共调用4次
-  emitter.emit("unlock");
-  bagChange(false); //打开bag 0.7s
-  new Promise((resolve) => {
-    setTimeout(() => {
-      emitter.emit("shake"); //0.8
-      resolve();
-    }, 700);
-  })
-    .then((res) => {
-      return new Promise((resolve) => {
-        setTimeout(() => {
-          emitter.emit("shake"); //0.8
-          resolve();
-        }, 1300);
-      });
-    })
-    .then((res) => {
-      return new Promise((resolve) => {
-        setTimeout(() => {
-          bagChange(true);
-          resolve()
-        }, 1200);
-      });
-    });
+  emitter.emit("getmessage");
+  bagChange(false);
+  let t1 = setTimeout(() => {
+    emitter.emit("shake");
+  }, 700); //等待背包打开
+  let t2 = setTimeout(() => {
+    emitter.emit("shake");
+    console.log("t2");
+  }, 2000); //等待一次shake 800
+  let t3 = setTimeout(() => [bagChange(true)], 3000);
+
+  times.add(t1);
+  times.add(t2);
+  times.add(t3);
+};
+const clearTimes = () => {
+  times.forEach((t) => {
+    // console.log(t);
+    clearTimeout(t);
+  });
+  times.clear();
 };
 
 //svg arrow rotate
@@ -331,7 +333,6 @@ onBeforeUnmount(() => {
       src="/models/maze.glb"
     />
 
-
     <!-- hanashi -->
     <Character
       :x="2516.17"
@@ -447,7 +448,7 @@ onBeforeUnmount(() => {
   <Bag />
   <Phone :phoneOn="phoneOn" />
   <!-- <button class="test" @click="bagChange(!store.state.bag.bagOn)" style="position:absolute;right:0;top:80px;color:#fff;">Bag</button> -->
-  
+
   <!-- Challenge -->
   <Challenge />
 
