@@ -87,7 +87,9 @@ onBeforeUnmount(() => {
   font-size: 12px;
   line-height: 50px;
   overflow: hidden;
-
+  border: 5px solid rgba(65, 59, 117, 0.7);
+  box-shadow: 0px 5px 5px rgb(137 131 193 / 62%);
+  box-sizing: content-box;
   .chart {
     max-width: none;
     //347 ==> 228.6
