@@ -334,6 +334,8 @@ onBeforeUnmount(() => {
       src="/models/maze.glb"
     />
 
+    <!-- treasure -->
+
     <!-- hanashi -->
     <Character
       :x="2516.17"
