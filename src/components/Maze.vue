@@ -52,6 +52,8 @@ import {
   camera_springMaxPolarAngle,
 } from "../hooks/camera.js";
 import { arrow } from "../hooks/arrow.js";
+import { treasureEnter,treasure1,treasure2, } from "../hooks/mazeHooks/treasure.js"
+
 import emitter from "../eventBus.js";
 //components
 import Map from "./map.vue";
@@ -335,6 +337,28 @@ onBeforeUnmount(() => {
     />
 
     <!-- treasure -->
+    <!-- 1 -->
+    <Sprite 
+      :x="-87.30"
+      :y="94.92"
+      :z="-59.77"
+      :width="60"
+      :height="60"
+      texture="/UI/defence/treasure.png"
+      bloom
+      :opacityFactor="1.1"
+      :opacity="1"
+    />
+    <Trigger 
+      pad
+      :x="-87.30"
+      :y="20"
+      :z="-59.77"
+      :radius="120"
+      targetIds="character"
+      data-treasureNum="1"
+      @enter="treasureEnter(1)"
+    />
 
     <!-- hanashi -->
     <Character

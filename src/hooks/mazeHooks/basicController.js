@@ -1,6 +1,6 @@
 import { ref } from "vue"
 
-const editorOn = ref(true)
+const editorOn = ref(false)
 
 
 export{
