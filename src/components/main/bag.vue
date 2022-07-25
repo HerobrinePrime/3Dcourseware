@@ -88,6 +88,7 @@ export default {
     const keys = store.state.bag.keys;
     const keyItem = ref(0)
     watch(keys, (newValue) => {
+      console.log("keyDec");
       if (active.value) {
         console.log("unDisplaying");
         store.commit("BAGCHANGE", false);

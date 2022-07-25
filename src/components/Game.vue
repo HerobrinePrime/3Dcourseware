@@ -500,6 +500,7 @@ const Maze = ()=>{
 //#region
 onMounted(() => {
   emitter.on("*", () => {
+    // console.log("******");
     bagChange(true);
   });
   emitter.on("thebook", () => {
@@ -525,6 +526,7 @@ onMounted(() => {
   });
 });
 onBeforeUnmount(() => {
+  emitter.off('*')
   emitter.off("thebook");
   emitter.off("thephone");
   emitter.off("screenOff");
