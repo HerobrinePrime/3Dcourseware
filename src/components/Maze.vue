@@ -18,6 +18,7 @@ import {
   HTML,
   Cube,
   useAnimation,
+  Sprite,
 } from "lingo3d-vue";
 import {
   computed,
