@@ -97,7 +97,9 @@ const disappear = (target,num) => {
 const getTreasure = (num)=>{
     //收集回调
     console.log("got",num);
-    getKey(num)
+    setTimeout(()=>{
+      getKey(num)
+    },1000)
 }
 
 const treasure1 = ref()

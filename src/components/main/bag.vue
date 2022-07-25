@@ -94,7 +94,7 @@ export default {
         store.commit("BAGCHANGE", false);
         setTimeout(()=>{
           keyItem.value = newValue.size
-        },700)
+        },1000)
         setTimeout(() => {
           store.commit("BAGCHANGE", true);
         }, 2400);
