@@ -52,7 +52,7 @@ import {
   camera_springMaxPolarAngle,
 } from "../hooks/camera.js";
 import { arrow } from "../hooks/arrow.js";
-import { treasureEnter,treasure1,treasure2, } from "../hooks/mazeHooks/treasure.js"
+// import { treasureEnter,treasure1,treasure2, } from "../hooks/mazeHooks/treasure.js"//treasure hook
 
 import emitter from "../eventBus.js";
 //components
@@ -68,6 +68,41 @@ import Challenge from "./challenge/challenge.vue";
 
 const store = useStore();
 const router = useRouter();
+
+//treasure
+// #region
+//y anime
+const yAnime = useAnimation({
+  from:120,
+  to:160,
+  repeat:Infinity,
+  repeatType:'reverse',
+  duration: 1500,
+})
+const treasureEnter = (num) => {
+    if (num == 1) disappear(treasure1,num)
+    else disappear(treasure2,num)
+}
+const disappear = (target,num) => {
+    const treasure = target.value
+    treasure.onLoop = ()=>{
+        treasure.opacity -= 0.05
+        if(treasure.opacity <= 0){
+            treasure.onLoop = undefined
+            //收集到了
+            getTreasure(num)
+        }
+    }
+}
+const getTreasure = (num)=>{
+    //收集回调
+    console.log("got",num);
+    getKey(num)
+}
+
+const treasure1 = ref()
+const treasure2 = ref()
+// #endregion
 
 //setup 立即验证token
 store.dispatch("testToken", localStorage.getItem("token")).then(({ code }) => {
@@ -186,6 +221,7 @@ const pos = () => {
 const theTrigger = () => {
   person.value.moveTo(store.state.x, store.state.y, store.state.z, 20000);
 };
+//#endregion
 
 //bus
 onMounted(() => {
@@ -339,12 +375,14 @@ onBeforeUnmount(() => {
     <!-- treasure -->
     <!-- 1 -->
     <Sprite 
+      ref="treasure1"
       :x="-87.30"
-      :y="94.92"
+      :y="yAnime"
       :z="-59.77"
       :width="60"
       :height="60"
       texture="/UI/defence/treasure.png"
+      @click="mapOnClick"
       bloom
       :opacityFactor="1.1"
       :opacity="1"
