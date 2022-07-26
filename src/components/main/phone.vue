@@ -32,7 +32,7 @@
       
     </div>
     <button class="batu" @click="emitter.emit('thephone')">
-      phone-off
+      <img src="/UI/phone/batu.png">
     </button>
   </div>
 </template>
@@ -162,8 +162,12 @@ onBeforeUnmount(()=>{
   }
   .batu{
     position: absolute;
-    right: 0;
-    top: 45%;
+    right: 5.4%;
+    top: 44.6%;
+    // background-color: aqua;
+    img{
+      height: 25px;
+    }
   }
 }
 .off {

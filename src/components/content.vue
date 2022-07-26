@@ -169,24 +169,24 @@ const processAdd = async () => {
       resolve();
     }, 300);
   })
-    .then((res) => {
-      return new Promise((resolve) => {
-        typing.value = true;
-        setTimeout(() => {
-          process.value++;
-          typing.value = false;
-          resolve();
-        }, 2000);
-      });
-    })
-    .then((res) => {
-      return new Promise((resolve) => {
-        setTimeout(() => {
-          buttonHidden.value = false;
-          resolve();
-        }, 500);
-      });
+  .then((res) => {
+    return new Promise((resolve) => {
+      typing.value = true;
+      setTimeout(() => {
+        process.value++;
+        typing.value = false;
+        resolve();
+      }, 2000);
     });
+  })
+  .then((res) => {
+    return new Promise((resolve) => {
+      setTimeout(() => {
+        buttonHidden.value = false;
+        resolve();
+      }, 500);
+    });
+  });
 
   setTimeout(() => {
     processing = false;
@@ -523,18 +523,30 @@ const input = () => {
       .button-hidden {
         transition: opacity 0.3s ease;
         opacity: 0;
+        background-color: #00000029;
+        border-radius: 17px;
       }
       .v-enter-active,
       .v-leave-active {
         transition: opacity 0.3s ease !important;
+        background-color: #00000029;
+        border-radius: 17px;
       }
-      .v-enter-from,
-      .v-leave-to {
+      .v-enter-from {
         opacity: 0;
       }
-      .v-enter-to,
+      .v-leave-to {
+        opacity: 0;
+        background-color: transparent;
+        border-radius: 17px;
+      }
+      .v-enter-to {
+        opacity: 1;
+      }
       .v-leave-from {
         opacity: 1;
+        background-color: #00000029;
+        border-radius: 17px;
       }
     }
   }
