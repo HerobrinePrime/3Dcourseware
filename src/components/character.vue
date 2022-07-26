@@ -45,6 +45,7 @@ const { state,commit } = useStore();
 const count = ref(0);
 const done = ref(false);
 
+
 const char = ref();
 const saying = ref(false);
 const interacting = ref(false);

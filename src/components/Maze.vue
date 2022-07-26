@@ -267,6 +267,10 @@ onMounted(() => {
     });
     // orbitCameraInstance.value.lookTo(x,undefined,z,0.5)
   });
+
+  emitter.on('gettreasure',(num)=>{
+    getTreasure(num)
+  })
 });
 onBeforeUnmount(() => {
   emitter.off("thebook");
@@ -275,6 +279,8 @@ onBeforeUnmount(() => {
   emitter.off("interactionStarted");
   emitter.off("interactionEnded");
   emitter.off("lookat");
+
+  emitter.off('gettreasure')
 });
 </script>
 
