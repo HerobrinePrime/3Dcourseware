@@ -525,22 +525,21 @@ const input = () => {
         opacity: 0;
         background-color: #00000029;
         border-radius: 17px;
+        right: 40px !important;
       }
       .v-enter-active,
       .v-leave-active {
         transition: opacity 0.3s ease !important;
-        background-color: #00000029;
-        border-radius: 17px;
       }
       .v-enter-from {
         opacity: 0;
       }
       .v-leave-to {
         opacity: 0;
-        background-color: transparent;
+        background-color: #00000029;
         border-radius: 17px;
       }
-      .v-enter-to {
+      .v-enter-to{
         opacity: 1;
       }
       .v-leave-from {
