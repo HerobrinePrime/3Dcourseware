@@ -416,7 +416,7 @@ const exitIntersect = (e) => {
       orbitCamera.innerRotationX = -20
 
       setTimeout(()=>{
-        spriteWidth.value = 70
+        spriteWidth.value = 60
       },400)
       // spriteWidth = useAnimation({from:0,to:100,duration:800})
       const sprite = theSprite.value
