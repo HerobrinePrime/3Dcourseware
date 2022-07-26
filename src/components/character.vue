@@ -18,7 +18,7 @@
   >
     <HTML>
       <div class="hanashi" v-show="saying">
-        {{ state.hanashi[hanashi][count] }}
+        {{ state.hanashi[hanashi][count].kotoba }}
       </div>
     </HTML>
   </Model>
