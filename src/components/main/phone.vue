@@ -31,7 +31,7 @@
       <img class="back" src="/UI/phone/back.png" @click="storeCount = 0"/>
       
     </div>
-    <button style="position: absolute" @click="emitter.emit('thephone')">
+    <button class="batu" @click="emitter.emit('thephone')">
       phone-off
     </button>
   </div>
@@ -159,6 +159,11 @@ onBeforeUnmount(()=>{
       cursor: pointer;
     }
 
+  }
+  .batu{
+    position: absolute;
+    right: 0;
+    top: 45%;
   }
 }
 .off {

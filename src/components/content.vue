@@ -89,7 +89,7 @@ import { TransitionGroup } from "@vue/runtime-dom";
 import { useStore } from "vuex";
 
 //portraits
-const portraits = reactive(["/UI/phone/portraits/portrait0.png", "/UI/phone/portraits/portrait0.png", "/UI/phone/portraits/portrait0.png", "/UI/phone/portraits/portrait0.png"]);
+const portraits = reactive(["/UI/phone/portraits/portrait0.png", "/UI/phone/portraits/portrait1.png", "/UI/phone/portraits/portrait2.png", "/UI/phone/portraits/portrait3.png"]);
 
 //vue const
 const props = defineProps(["count", "sign"]);
@@ -357,7 +357,7 @@ const input = () => {
 <style lang="less" scoped>
 .right-panel {
   position: absolute;
-  top: 72px;
+  top: 75px;
   right: 3px;
   width: 66.3%;
   display: flex;

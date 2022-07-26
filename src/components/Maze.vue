@@ -443,7 +443,7 @@ onBeforeUnmount(() => {
       :hanashi="2"
       src="rabbit-with-yellow-skin.glb"
       :theThirdKey="true"
-    />
+    /><!-- theThirdKey -->
 
     <Character
       :x="-3678.25"
@@ -477,7 +477,7 @@ onBeforeUnmount(() => {
       :kaiwa="2"
       src2="dog-with-brown-fur.glb"
       :theForthKey="true"
-    />
+    /><!-- theForthKey -->
 
     <AmbientLight />
     <SvgMesh
@@ -547,7 +547,7 @@ onBeforeUnmount(() => {
   >
     Map
   </button>
-  <button
+  <!-- <button
     class="test"
     @click="getKey(1)"
     style="position: absolute; right: 0; top: 160px; color: #fff"
@@ -581,18 +581,18 @@ onBeforeUnmount(() => {
     style="position: absolute; right: 0; top: 240px; color: #fff"
   >
     shake
-  </button>
+  </button> -->
   <button
     class="test"
     @click="editorOn = !editorOn"
-    style="position: absolute; right: 0; top: 280px; color: #fff"
+    style="position: absolute; right: 0; top: 150px; color: #fff"
   >
     editorOn
   </button>
   <button
     class="test"
     @click="getMessage"
-    style="position: absolute; right: 0; top: 320px; color: #fff"
+    style="position: absolute; right: 0; top: 180px; color: #fff"
   >
     getMessage
   </button>
