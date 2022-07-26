@@ -18,30 +18,32 @@
         <img src="/UI/bag/phone.png" />
       </div>
     </div>
+
     <div class="items">
       <img class="item-bc" src="/UI/bag/item-bc.png" />
       <div class="item " :class="{'has-item':keyItem > 0}">
-        <img src="/UI/bag/book.png" />
+        <img :src="treasureArray[0]" />
       </div>
     </div>
     <div class="items">
       <img class="item-bc" src="/UI/bag/item-bc.png" />
       <div class="item " :class="{'has-item':keyItem > 1}">
-        <img src="/UI/bag/book.png" />
+        <img :src="treasureArray[1]" />
       </div>
     </div>
     <div class="items">
       <img class="item-bc" src="/UI/bag/item-bc.png" />
       <div class="item " :class="{'has-item':keyItem > 2}">
-        <img src="/UI/bag/book.png" />
+        <img :src="treasureArray[2]" />
       </div>
     </div>
     <div class="items">
       <img class="item-bc" src="/UI/bag/item-bc.png" />
       <div class="item " :class="{'has-item':keyItem > 3}">
-        <img src="/UI/bag/book.png" />
+        <img :src="treasureArray[3]" />
       </div>
     </div>
+
     <div class="items">
       <img class="item-bc" src="/UI/bag/item-bc.png" />
       <div class="item ">
@@ -85,15 +87,26 @@ export default {
       console.log(newValue,"asdf");
     });
     
+    const treasureArray = reactive([])
     const keys = store.state.bag.keys;
     const keyItem = ref(0)
-    watch(keys, (newValue) => {
+    watch(keys, (newValue,oldValue) => {
       console.log("keyDec");
       if (active.value) {
         console.log("unDisplaying");
         store.commit("BAGCHANGE", false);
         setTimeout(()=>{
+          //计数，以数量控制has-item样式
           keyItem.value = newValue.size
+          //遍历Set,为了找到新加的那一个key
+          newValue.forEach((ele,index)=>{
+            //数组中没它 == -1 要push
+            if(treasureArray.indexOf(`/UI/defence/treasure${ele}.png`) == -1){
+              treasureArray.push(`/UI/defence/treasure${ele}.png`)
+            }
+          })
+          console.log(treasureArray);
+
         },1000)
         setTimeout(() => {
           store.commit("BAGCHANGE", true);
@@ -134,6 +147,7 @@ export default {
       shaking,
       keys,
       keyItem,
+      treasureArray,
     };
   },
 };

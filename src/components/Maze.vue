@@ -89,11 +89,13 @@ const disappear = (target,num) => {
         treasure.opacity -= 0.05
         if(treasure.opacity <= 0){
             treasure.onLoop = undefined
+            treasure.visible = false
             //收集到了
             getTreasure(num)
         }
     }
 }
+//決定事項
 const getTreasure = (num)=>{
     //收集回调
     console.log("got",num);
@@ -383,7 +385,7 @@ onBeforeUnmount(() => {
       :z="-59.77"
       :width="60"
       :height="60"
-      texture="/UI/defence/treasure.png"
+      texture="/UI/defence/treasure1.png"
       @click="mapOnClick"
       bloom
       :opacityFactor="1.1"
@@ -396,8 +398,30 @@ onBeforeUnmount(() => {
       :z="-59.77"
       :radius="120"
       targetIds="character"
-      data-treasureNum="1"
       @enter="treasureEnter(1)"
+    />
+    <!-- 2 -->
+    <Sprite 
+      ref="treasure2"
+      :x="-400"
+      :y="yAnime"
+      :z="-59.77"
+      :width="60"
+      :height="60"
+      texture="/UI/defence/treasure2.png"
+      @click="mapOnClick"
+      bloom
+      :opacityFactor="1.1"
+      :opacity="1"
+    />
+    <Trigger 
+      pad
+      :x="-400"
+      :y="20"
+      :z="-59.77"
+      :radius="120"
+      targetIds="character"
+      @enter="treasureEnter(2)"
     />
 
     <!-- hanashi -->
