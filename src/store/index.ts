@@ -18,6 +18,7 @@ export default createStore({
         defences:new Map([['key1',false],['key2',false],['key3',false],['key4',false]]),
         //自言自语
         hanashi: [
+            
             [
                 'hitogoto',
                 'second',
