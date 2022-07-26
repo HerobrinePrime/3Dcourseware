@@ -57,15 +57,21 @@
 </template>
 
 <script setup>
-import { onMounted, onBeforeUnmount, watch, watchPostEffect, ref } from "@vue/runtime-core";
+import {
+  onMounted,
+  onBeforeUnmount,
+  watch,
+  watchPostEffect,
+  ref,
+} from "@vue/runtime-core";
 import { useZIndex } from "element-plus";
 import { Model, HTML } from "lingo3d-vue";
 import { useStore } from "vuex";
 import emitter from "../eventBus";
 import store from "../store";
 
-const { state,commit } = useStore();
-const { kaiwa } = defineProps([
+const { state, commit } = useStore();
+const { kaiwa, theThirdKey, theForthKey } = defineProps([
   "x1",
   "z1",
   "rotationY1",
@@ -75,13 +81,19 @@ const { kaiwa } = defineProps([
   "rotationY2",
   "src2",
   "kaiwa",
+  "theThirdKey",
+  "theForthKey",
 ]);
 
 const count = ref(0);
 const done = ref(false);
-watch(done,(newVlaue)=>{
+watch(done, (newVlaue) => {
   console.log(newVlaue);
-})
+  console.log("theThirdKey:", theThirdKey);
+  console.log("theForthKey:", theForthKey);
+  if(theThirdKey) emitter.emit('gettreasure',3)
+  if(theForthKey) emitter.emit('gettreasure',4)
+});
 
 const char1 = ref();
 const char2 = ref();
@@ -94,7 +106,7 @@ const shut = () => {
   saying.value = false;
 };
 const interact = (e) => {
-  emitter.emit('lookat',{x:e.point.x,z:e.point.z})
+  emitter.emit("lookat", { x: e.point.x, z: e.point.z });
   //display其他对话
   emitter.emit("disable", {
     kaiwa,
@@ -137,17 +149,16 @@ const disinteract = () => {
   //emitter切换视角
   emitter.emit("interactionEnded");
 };
-let reject = false
+let reject = false;
 const tuzuki = () => {
-  
-  if(reject) return
+  if (reject) return;
   count.value++;
   console.log(count.value);
   if (count.value >= state.kaiwa[kaiwa].length) {
-    reject = true
-    setTimeout(()=>{
-      reject = false
-    },1200)
+    reject = true;
+    setTimeout(() => {
+      reject = false;
+    }, 1200);
     //没话了
     disinteract();
     //已经完成一轮对话
@@ -252,13 +263,13 @@ onBeforeUnmount(() => {
     // text-shadow: 0px 0px 3px 3px #fff;
 
     position: absolute;
-    content: ' ';
+    content: " ";
     height: 30px;
     width: 30px;
     background-color: white;
     bottom: -1px;
     left: 0;
-    transform: translate(15px,15px) rotate(45deg);
+    transform: translate(15px, 15px) rotate(45deg);
     border: 5px solid #766baa;
     border-left-color: transparent;
     border-top-color: transparent;
@@ -305,7 +316,7 @@ onBeforeUnmount(() => {
       bottom: 75px;
       left: -20px;
       // transform-origin: 50% 50%;
-      transform: rotate(45deg); 
+      transform: rotate(45deg);
       border: 5px solid #766baa;
       border-top-color: transparent;
       border-right-color: transparent;

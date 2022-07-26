@@ -453,6 +453,7 @@ onBeforeUnmount(() => {
       :rotationY="-18.99"
       :hanashi="2"
       src="rabbit-with-yellow-skin.glb"
+      :theThirdKey="true"
     />
 
     <Character
@@ -486,6 +487,7 @@ onBeforeUnmount(() => {
       :rotationY2="-35.44"
       :kaiwa="2"
       src2="dog-with-brown-fur.glb"
+      :theForthKey="true"
     />
 
     <AmbientLight />

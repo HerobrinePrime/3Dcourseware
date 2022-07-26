@@ -36,17 +36,28 @@
 import { useStore } from "vuex";
 import { HTML, Model } from "lingo3d-vue";
 import emitter from "../eventBus";
-import { onBeforeUnmount, onMounted,ref,watch } from "@vue/runtime-core";
+import { onBeforeUnmount, onMounted, ref, watch } from "@vue/runtime-core";
 
-const { hanashi } = defineProps(["x", "z", "rotationY", "src", "hanashi"]);
-const { state,commit } = useStore();
+const { hanashi, theThirdKey, theForthKey } = defineProps([
+  "x",
+  "z",
+  "rotationY",
+  "src",
+  "hanashi",
+  "theThirdKey",
+  "theForthKey",
+]);
+const { state, commit } = useStore();
 
 const count = ref(0);
 const done = ref(false);
-watch(done,(newVlaue)=>{
+watch(done, (newVlaue) => {
   console.log(newVlaue);
-  
-})
+  console.log("theThirdKey:", theThirdKey);
+  console.log("theForthKey:", theForthKey);
+  if(theThirdKey) emitter.emit('gettreasure',3)
+  if(theForthKey) emitter.emit('gettreasure',4)
+});
 
 const char = ref();
 const saying = ref(false);
@@ -294,7 +305,7 @@ onBeforeUnmount(() => {
       bottom: 75px;
       left: -20px;
       // transform-origin: 50% 50%;
-      transform: rotate(45deg); 
+      transform: rotate(45deg);
       border: 5px solid #766baa;
       border-top-color: transparent;
       border-right-color: transparent;
