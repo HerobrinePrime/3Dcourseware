@@ -33,18 +33,20 @@
 </template>
 
 <script setup>
-import { ref } from "@vue/reactivity";
 import { useStore } from "vuex";
 import { HTML, Model } from "lingo3d-vue";
 import emitter from "../eventBus";
-import { onBeforeUnmount, onMounted, Transition } from "@vue/runtime-dom";
+import { onBeforeUnmount, onMounted,ref,watch } from "@vue/runtime-core";
 
 const { hanashi } = defineProps(["x", "z", "rotationY", "src", "hanashi"]);
 const { state,commit } = useStore();
 
 const count = ref(0);
 const done = ref(false);
-
+watch(done,(newVlaue)=>{
+  console.log(newVlaue);
+  
+})
 
 const char = ref();
 const saying = ref(false);

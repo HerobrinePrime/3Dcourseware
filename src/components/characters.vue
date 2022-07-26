@@ -57,8 +57,7 @@
 </template>
 
 <script setup>
-import { ref } from "@vue/reactivity";
-import { onMounted, onBeforeUnmount } from "@vue/runtime-core";
+import { onMounted, onBeforeUnmount, watch, watchPostEffect, ref } from "@vue/runtime-core";
 import { useZIndex } from "element-plus";
 import { Model, HTML } from "lingo3d-vue";
 import { useStore } from "vuex";
@@ -80,6 +79,9 @@ const { kaiwa } = defineProps([
 
 const count = ref(0);
 const done = ref(false);
+watch(done,(newVlaue)=>{
+  console.log(newVlaue);
+})
 
 const char1 = ref();
 const char2 = ref();
