@@ -19,6 +19,11 @@
     <HTML>
       <div class="hanashi" v-show="saying">
         {{ state.hanashi[hanashi][count].kotoba }}
+        <Transition name="treasure">
+          <div class="treasure" v-if="state.hanashi[hanashi][count].key && !done">
+            <img :src="`/UI/defence/treasure${state.hanashi[hanashi][count].key}.png`">
+          </div>
+        </Transition>
       </div>
     </HTML>
   </Model>
@@ -37,6 +42,7 @@ import { useStore } from "vuex";
 import { HTML, Model } from "lingo3d-vue";
 import emitter from "../eventBus";
 import { onBeforeUnmount, onMounted, ref, watch } from "@vue/runtime-core";
+import { Transition } from "@vue/runtime-dom";
 
 const { hanashi, theThirdKey, theForthKey } = defineProps([
   "x",
@@ -264,6 +270,21 @@ onBeforeUnmount(() => {
   //   border-right-color: transparent;
   //   border-bottom: none;
   // }
+  .treasure{
+    transition: opacity 0.5s ease;
+    position: absolute;
+    height: 50px;
+    width: 50px;
+    // background-color: aqua;
+    left: -70px;
+    bottom: 0;
+    top: 0;
+    margin: auto 0;
+    img{
+      height: 100%;
+      width: 100%;
+    }
+  }
 }
 //一存
 .ichizon {
@@ -318,6 +339,15 @@ onBeforeUnmount(() => {
 }
 .i-enter-to,
 .i-leave-from {
+  opacity: 1;
+}
+
+.treasure-enter-from,
+.treasure-leave-to {
+  opacity: 0;
+}
+.treasure-enter-to,
+.treasure-leave-from {
   opacity: 1;
 }
 </style>

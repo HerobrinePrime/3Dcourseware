@@ -30,7 +30,7 @@ export default createStore({
             ],
             [
                 {kotoba:'宿命なのかい？'},
-                {kotoba:'自分のゆく道は、自分選びたいんですけど'},
+                {kotoba:'自分のゆく道は、自分選びたいんですけど',key:3,},
                 {kotoba:'いまさらもはや止められない'},
             ],
             [
@@ -63,7 +63,7 @@ export default createStore({
                 { c: false, kotoba: 'dfghj' },
                 { c: false, kotoba: 'ryfgh' },
                 { c: true, kotoba: 'dfgh e4gfb' },
-                { c: true, kotoba: 'dtfhyswer5' },
+                { c: true, kotoba: 'dtfhyswer5',key:4 },
                 { c: true, kotoba: 'dgs48741' },
                 { c: false, kotoba: 'ending' },
             ],

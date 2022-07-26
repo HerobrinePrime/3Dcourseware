@@ -73,39 +73,39 @@ const router = useRouter();
 // #region
 //y anime
 const yAnime = useAnimation({
-  from:120,
-  to:160,
-  repeat:Infinity,
-  repeatType:'reverse',
+  from: 120,
+  to: 160,
+  repeat: Infinity,
+  repeatType: "reverse",
   duration: 1500,
-})
+});
 const treasureEnter = (num) => {
-    if (num == 1) disappear(treasure1,num)
-    else disappear(treasure2,num)
-}
-const disappear = (target,num) => {
-    const treasure = target.value
-    treasure.onLoop = ()=>{
-        treasure.opacity -= 0.05
-        if(treasure.opacity <= 0){
-            treasure.onLoop = undefined
-            treasure.visible = false
-            //收集到了
-            getTreasure(num)
-        }
+  if (num == 1) disappear(treasure1, num);
+  else disappear(treasure2, num);
+};
+const disappear = (target, num) => {
+  const treasure = target.value;
+  treasure.onLoop = () => {
+    treasure.opacity -= 0.05;
+    if (treasure.opacity <= 0) {
+      treasure.onLoop = undefined;
+      treasure.visible = false;
+      //收集到了
+      getTreasure(num);
     }
-}
+  };
+};
 //決定事項
-const getTreasure = (num)=>{
-    //收集回调
-    console.log("got",num);
-    setTimeout(()=>{
-      getKey(num)
-    },1000)
-}
+const getTreasure = (num) => {
+  //收集回调
+  console.log("got", num);
+  setTimeout(() => {
+    getKey(num);
+  }, 1000);
+};
 
-const treasure1 = ref()
-const treasure2 = ref()
+const treasure1 = ref();
+const treasure2 = ref();
 // #endregion
 
 //setup 立即验证token
@@ -127,7 +127,7 @@ const getKey = (key) => {
 const times = reactive(new Set());
 const getMessage = () => {
   //清除times
-  clearTimes()
+  clearTimes();
 
   //手机收到消息 一共调用4次
   emitter.emit("getmessage");
@@ -268,9 +268,9 @@ onMounted(() => {
     // orbitCameraInstance.value.lookTo(x,undefined,z,0.5)
   });
 
-  emitter.on('gettreasure',(num)=>{
-    getTreasure(num)
-  })
+  emitter.on("gettreasure", (num) => {
+    getTreasure(num);
+  });
 });
 onBeforeUnmount(() => {
   emitter.off("thebook");
@@ -280,7 +280,7 @@ onBeforeUnmount(() => {
   emitter.off("interactionEnded");
   emitter.off("lookat");
 
-  emitter.off('gettreasure')
+  emitter.off("gettreasure");
 });
 </script>
 
@@ -384,9 +384,9 @@ onBeforeUnmount(() => {
 
     <!-- treasure -->
     <!-- 1 -->
-    <Sprite 
+    <Sprite
       ref="treasure1"
-      :x="-87.30"
+      :x="-87.3"
       :y="yAnime"
       :z="-59.77"
       :width="60"
@@ -397,9 +397,9 @@ onBeforeUnmount(() => {
       :opacityFactor="1.1"
       :opacity="1"
     />
-    <Trigger 
+    <Trigger
       pad
-      :x="-87.30"
+      :x="-87.3"
       :y="20"
       :z="-59.77"
       :radius="120"
@@ -407,7 +407,7 @@ onBeforeUnmount(() => {
       @enter="treasureEnter(1)"
     />
     <!-- 2 -->
-    <Sprite 
+    <Sprite
       ref="treasure2"
       :x="-400"
       :y="yAnime"
@@ -420,7 +420,7 @@ onBeforeUnmount(() => {
       :opacityFactor="1.1"
       :opacity="1"
     />
-    <Trigger 
+    <Trigger
       pad
       :x="-400"
       :y="20"
@@ -607,6 +607,13 @@ onBeforeUnmount(() => {
   >
     getMessage
   </button>
+
+  <div style="position: absolute; z-index: -1; left: -50px">
+    <img src="/UI/defence/treasure1.png" />
+    <img src="/UI/defence/treasure2.png" />
+    <img src="/UI/defence/treasure3.png" />
+    <img src="/UI/defence/treasure4.png" />
+  </div>
 </template>
 
 <style lang="less" scoped>

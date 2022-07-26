@@ -19,6 +19,13 @@
     <HTML>
       <div class="hanashi" v-show="state.kaiwa[kaiwa][count].c && saying">
         {{ state.kaiwa[kaiwa][count].kotoba }}
+        <Transition name="treasure">
+          <div class="treasure" v-if="state.kaiwa[kaiwa][count].key && !done">
+            <img
+              :src="`/UI/defence/treasure${state.kaiwa[kaiwa][count].key}.png`"
+            />
+          </div>
+        </Transition>
       </div>
     </HTML>
   </Model>
@@ -42,6 +49,13 @@
     <HTML>
       <div class="hanashi" v-show="!state.kaiwa[kaiwa][count].c && saying">
         {{ state.kaiwa[kaiwa][count].kotoba }}
+        <Transition name="treasure">
+          <div class="treasure" v-if="state.kaiwa[kaiwa][count].key && !done">
+            <img
+              :src="`/UI/defence/treasure${state.kaiwa[kaiwa][count].key}.png`"
+            />
+          </div>
+        </Transition>
       </div>
     </HTML>
   </Model>
@@ -64,6 +78,7 @@ import {
   watchPostEffect,
   ref,
 } from "@vue/runtime-core";
+import { Transition } from "@vue/runtime-dom";
 import { useZIndex } from "element-plus";
 import { Model, HTML } from "lingo3d-vue";
 import { useStore } from "vuex";
@@ -91,8 +106,8 @@ watch(done, (newVlaue) => {
   console.log(newVlaue);
   console.log("theThirdKey:", theThirdKey);
   console.log("theForthKey:", theForthKey);
-  if(theThirdKey) emitter.emit('gettreasure',3)
-  if(theForthKey) emitter.emit('gettreasure',4)
+  if (theThirdKey) emitter.emit("gettreasure", 3);
+  if (theForthKey) emitter.emit("gettreasure", 4);
 });
 
 const char1 = ref();
@@ -275,6 +290,22 @@ onBeforeUnmount(() => {
     border-top-color: transparent;
     // box-shadow: 8px 8px 20px 1px #fff;
   }
+
+  .treasure {
+    transition: opacity 0.5s ease;
+    position: absolute;
+    height: 50px;
+    width: 50px;
+    // background-color: aqua;
+    left: -70px;
+    bottom: 0;
+    top: 0;
+    margin: auto 0;
+    img {
+      height: 100%;
+      width: 100%;
+    }
+  }
 }
 //一存
 .ichizon {
@@ -329,6 +360,15 @@ onBeforeUnmount(() => {
 }
 .i-enter-to,
 .i-leave-from {
+  opacity: 1;
+}
+
+.treasure-enter-from,
+.treasure-leave-to {
+  opacity: 0;
+}
+.treasure-enter-to,
+.treasure-leave-from {
   opacity: 1;
 }
 </style>
