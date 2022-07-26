@@ -19,6 +19,7 @@ import {
   Cube,
   useAnimation,
   Sprite,
+  Cylinder,
 } from "lingo3d-vue";
 import {
   computed,
@@ -307,28 +308,6 @@ onBeforeUnmount(() => {
       :onEnter="theTrigger"
       :interval="0"
     />
-    <!-- <OrbitCamera
-      active
-      ref="orbitCameraInstance"
-      :x="cameraPosition.x"
-      :y="cameraPosition.y"
-      :z="cameraPosition.z"
-      :innerX="springInnerX"
-      :innerY="springInnerY"
-      :innerZ="springInnerZ"
-      :rotationX="springRotationX"
-      :rotationY="springRotationY"
-      :rotationZ="springRotationZ"
-      :innerRotationX="springInnerRotationX"
-      :innerRotationY="springInnerRotationY"
-      :innerRotationZ="springInnerRotationZ"
-      :autoRotate="autoRotate"
-      :autoRotateSpeed="autoRotateSpeed"
-      :enableDamping="enableDamping"
-      :minPolarAngle="springMinPolarAngle"
-      :maxPolarAngle="springMaxPolarAngle"
-      :mouseControl="mouseControl"
-    > -->
     <OrbitCamera
       active
       ref="orbitCameraInstance"
@@ -406,6 +385,16 @@ onBeforeUnmount(() => {
       targetIds="character"
       @enter="treasureEnter(1)"
     />
+    <!-- <Cylinder 
+      :x="-87.3"
+      :y="22.84"
+      :z="-59.77"
+      :width="240.00"
+      :height="18.50"
+      :depth="240.00"
+      :opacity="0.5"
+      :opacityFactor="1"
+    /> -->
     <!-- 2 -->
     <Sprite
       ref="treasure2"
@@ -510,7 +499,7 @@ onBeforeUnmount(() => {
       :rotationY="svgRotate"
     />
     <Setup
-      outlineColor="#39c5bb"
+      outlineColor="#ffffff"
       outlineHiddenColor="#db827f"
       :outlinePulse="2000"
       defaultLight="env/sunset_fairway_4k.hdr"

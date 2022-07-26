@@ -819,7 +819,7 @@ onBeforeUnmount(() => {
         :mirror="1"
       />
       <Setup
-        outlineColor="#39c5bb"
+        outlineColor="#ffffff"
         outlineHiddenColor="#db827f"
         :outlinePulse="2000"
         defaultLight="env/sunset_fairway_4k.hdr"
