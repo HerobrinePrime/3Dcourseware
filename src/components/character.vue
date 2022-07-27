@@ -5,7 +5,7 @@
     pbr
     :x="x"
     :z="z"
-    :src="`models/characters/${src}`"
+    :src="`/models/characters/${src}`"
     :y="87.38"
     :width="73.41"
     :depth="84.57"

@@ -433,7 +433,7 @@ onBeforeUnmount(() => {
       :z="1130.64"
       :rotationY="40.44"
       :hanashi="0"
-      src="pig-with-sunglass.fbx"
+      src="rabbit-with-sunglass.glb"
     />
 
     <Character
@@ -519,7 +519,7 @@ onBeforeUnmount(() => {
       :depth="100"
       :scaleX="-0.82"
       :scaleZ="0.19"
-      src="svg/arrow.svg"
+      src="/svg/arrow.svg"
       color="#ff4e4e"
       :x="arrow.x"
       :y="arrow.y + 150"

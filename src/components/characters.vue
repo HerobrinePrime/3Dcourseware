@@ -5,7 +5,7 @@
     :x="x1"
     :z="z1"
     :rotationY="rotationY1"
-    :src="`models/characters/${src1}`"
+    :src="`/models/characters/${src1}`"
     pbr
     :y="87.38"
     :width="73.41"
@@ -35,7 +35,7 @@
     :x="x2"
     :z="z2"
     :rotationY="rotationY2"
-    :src="`models/characters/${src2}`"
+    :src="`/models/characters/${src2}`"
     pbr
     :y="87.38"
     :width="73.41"

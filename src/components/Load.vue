@@ -44,9 +44,7 @@ const progress = usePreload(
     "/UI/book/news/img3-3.webp",
     "/UI/book/news/img4-1.webp",
     "/UI/book/news/img4-2.webp",
-    "/UI/icon2.webp",
-    "/UI/icon3.webp",
-    "/UI/icon4.webp",
+
     "/UI/login/student.png",
     "/UI/login/password.png",
     "/UI/login/portrait0.png",

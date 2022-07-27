@@ -8,17 +8,61 @@ import Maze from "./Maze.vue";
 
 const progress = usePreload(
   [
-    "/models/main/rabbit.fbx",
+    "/models/main/cat.fbx",
     "/models/maze.glb",
     "/models/characters/pig-with-sunglass.fbx",
-    "/models/characters/dog-with-black-tail.glb",
     "/models/characters/rabbit-with-sunglass.glb",
+    "/models/characters/rabbit-with-yellow-skin.glb",
+    "/models/characters/rabbit-with-wise-eyes.glb",
+    "/models/characters/tigger-with-orange-skin.glb",
+    "/models/characters/cat-with-orange-skin.glb",
+    "/models/characters/dog-with-brown-fur.glb",
+    "/models/characters/pig-with-pink-skin.glb",
+    "/models/characters/dog-with-black-tail.glb",
+
     "/svg/arrow.svg",
     "/env/sunset_fairway_4k.hdr",
     "/env/env1.hdr",
+
+    "/UI/icon1.webp",
     "/UI/icon2.webp",
     "/UI/icon3.webp",
     "/UI/icon4.webp",
+
+    "/UI/book/bot.png",
+    "/UI/book/fro.png",
+    "/UI/book/claw.png",
+    "/UI/book/close.png",
+    "/UI/book/news/img1.webp",
+    "/UI/book/news/img2.webp",
+    "/UI/book/news/img3.webp",
+
+    "/UI/book/news/img2-1.webp",
+    "/UI/book/news/img2-2.webp",
+    "/UI/book/news/img3-1.webp",
+    "/UI/book/news/img3-2.webp",
+    "/UI/book/news/img3-3.webp",
+    "/UI/book/news/img4-1.webp",
+    "/UI/book/news/img4-2.webp",
+
+    "/UI/phone/back.png",
+    "/UI/phone/batu.png",
+    "/UI/phone/batu.png",
+    "/UI/phone/body.png",
+    "/UI/phone/screen.png",
+    "/UI/phone/input.png",
+
+    //portraits
+    "/UI/phone/portraits/portrait0.png",
+
+    "/UI/bag/btn.png",
+    "/UI/bag/item-bc.png",
+    "/UI/bag/book.png",
+    "/UI/bag/phone.png",
+    "/UI/defence/treasure1.png",
+    "/UI/defence/treasure2.png",
+    "/UI/defence/treasure3.png",
+    "/UI/defence/treasure4.png",
   ],
   "40.42MB"
 );
