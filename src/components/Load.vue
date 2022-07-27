@@ -58,6 +58,19 @@ const progress = usePreload(
     "/UI/bag/item-bc.png",
     "/UI/bag/book.png",
     "/UI/bag/phone.png",
+
+    "/UI/selectpanel/1.png",
+    "/UI/selectpanel/2.png",
+    "/UI/selectpanel/3.png",
+    "/UI/selectpanel/4.png",
+
+    "/UI/phone/back.png",
+    "/UI/phone/batu.png",
+    "/UI/phone/body.png",
+    "/UI/phone/screen.png",
+    "/UI/phone/left.png",
+    "/UI/phone/right.png",
+    "/UI/phone/button.png"
   ],
   "35.42MB"
 );

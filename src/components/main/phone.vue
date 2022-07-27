@@ -62,7 +62,7 @@ onBeforeUnmount(()=>{
 <style lang="less" scoped>
 @font-face {
   font-family: "xknlt";
-  src: url(fonts/xknlt.ttf);
+  src: url(/fonts/xknlt.ttf);
 }
 .phone {
   transform: translate(0, 0);
