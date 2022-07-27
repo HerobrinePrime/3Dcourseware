@@ -74,7 +74,7 @@ const progress = usePreload(
     "/UI/phone/right.png",
     "/UI/phone/button.png"
   ],
-  "59.8MB"
+  "60.2MB"
 );
 
 const loaded = computed(() => {

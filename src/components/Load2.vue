@@ -10,6 +10,7 @@ const progress = usePreload(
   [
     "/models/main/cat.fbx",
     "/models/maze.glb",
+
     "/models/characters/pig-with-sunglass.fbx",
     "/models/characters/rabbit-with-sunglass.glb",
     "/models/characters/rabbit-with-yellow-skin.glb",
@@ -63,8 +64,10 @@ const progress = usePreload(
     "/UI/defence/treasure2.png",
     "/UI/defence/treasure3.png",
     "/UI/defence/treasure4.png",
+
+    "/UI/map/map.png"
   ],
-  "40.42MB"
+  "77.3MB"
 );
 const loaded = computed(() => {
   return progress.value == 100;
