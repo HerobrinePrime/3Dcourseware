@@ -78,7 +78,7 @@
         </div>
       </div>
     </div>
-    <div class="typing" :style="{ opacity: typing ? 1 : 0 }">Typing...</div>
+    <div class="typing" >{{typing?'Typing...':names[sign - 1]}}</div>
   </div>
 </template>
 
@@ -90,6 +90,8 @@ import { useStore } from "vuex";
 
 //portraits
 const portraits = reactive(["/UI/phone/portraits/portrait0.png", "/UI/phone/portraits/portrait1.png", "/UI/phone/portraits/portrait2.png", "/UI/phone/portraits/portrait3.png"]);
+//names
+const names = reactive(['アカツキ','セイバー','義眼','大明'])
 
 //vue const
 const props = defineProps(["count", "sign"]);

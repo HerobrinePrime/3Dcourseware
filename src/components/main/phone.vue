@@ -1,22 +1,31 @@
 <template>
   <div class="phone" :class="{ off: !phoneOn }">
     <div class="body">
+      <!-- ['アカツキ','セイバー','義眼','大明'] -->
       <div class="contact">
         <div class="hito" @click="storeCount = 1" v-show="unlockContent > 0">
-          <div class="icon"></div>
-          <div class="name">上午1</div>
+          <div class="icon">
+            <img src="/UI/phone/portraits/portrait0.png">
+          </div>
+          <div class="name">アカツキ</div>
         </div>
         <div class="hito" @click="storeCount = 2" v-show="unlockContent > 1">
-          <div class="icon"></div>
-          <div class="name">上午2</div>
+          <div class="icon">
+            <img src="/UI/phone/portraits/portrait1.png">
+          </div>
+          <div class="name">セイバー</div>
         </div>
         <div class="hito" @click="storeCount = 3" v-show="unlockContent > 2">
-          <div class="icon"></div>
-          <div class="name">上午3</div>
+          <div class="icon">
+            <img src="/UI/phone/portraits/portrait2.png">
+          </div>
+          <div class="name">義眼</div>
         </div>
         <div class="hito" @click="storeCount = 4" v-show="unlockContent > 3">
-          <div class="icon"></div>
-          <div class="name">上午4</div>
+          <div class="icon">
+            <img src="/UI/phone/portraits/portrait3.png">
+          </div>
+          <div class="name">大明</div>
         </div>
       </div>
       <!-- content -->
@@ -139,13 +148,24 @@ onBeforeUnmount(()=>{
         .icon {
           height: 70px;
           width: 70px;
-          background-color: antiquewhite;
+          // background-color: antiquewhite;
           margin: 0 20px;
+          img{
+            height: 100%;
+            width: 100%;
+            display: block;
+            border-radius: 10px;
+          }
         }
         .name {
           font-family: "xknlt";
           color: rgb(213, 211, 211);
           font-size: 27px;
+          width: 90px;
+          display:block;
+          white-space: nowrap;
+          overflow: hidden;
+          text-overflow: ellipsis;
         }
       }
     }
