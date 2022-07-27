@@ -84,9 +84,10 @@
 
 <script setup>
 import { reactive, ref } from "@vue/reactivity";
-import { computed, nextTick, watch } from "@vue/runtime-core";
+import { computed, nextTick, watch, watchEffect } from "@vue/runtime-core";
 import { TransitionGroup } from "@vue/runtime-dom";
 import { useStore } from "vuex";
+import emitter from "../eventBus";
 
 //portraits
 const portraits = reactive(["/UI/phone/portraits/portrait0.png", "/UI/phone/portraits/portrait1.png", "/UI/phone/portraits/portrait2.png", "/UI/phone/portraits/portrait3.png"]);
@@ -354,6 +355,23 @@ const input = () => {
   scrollDown();
 };
 //#endregion
+
+//yets逻辑
+watchEffect(()=>{
+  if(props.count == props.sign){
+    //只要是进入content 就不会显示yet
+    // console.log(props.sign);
+    emitter.emit('changeyets',{n:props.sign,sta:false})
+  }
+})
+watch(typing,(newValue,oldValue)=>{
+  console.log(newValue,oldValue);
+  if(!newValue && props.count != props.sign){
+    emitter.emit('changeyets',{n:props.sign,sta:true})
+  }
+})
+
+
 </script>
 
 <style lang="less" scoped>

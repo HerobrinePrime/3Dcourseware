@@ -5,24 +5,28 @@
       <div class="contact">
         <div class="hito" @click="storeCount = 1" v-show="unlockContent > 0">
           <div class="icon">
+            <div class="new" v-if="yets.get(1)"></div>
             <img src="/UI/phone/portraits/portrait0.png">
           </div>
           <div class="name">アカツキ</div>
         </div>
         <div class="hito" @click="storeCount = 2" v-show="unlockContent > 1">
           <div class="icon">
+            <div class="new" v-if="yets.get(2)"></div>
             <img src="/UI/phone/portraits/portrait1.png">
           </div>
           <div class="name">セイバー</div>
         </div>
         <div class="hito" @click="storeCount = 3" v-show="unlockContent > 2">
           <div class="icon">
+            <div class="new" v-if="yets.get(3)"></div>
             <img src="/UI/phone/portraits/portrait2.png">
           </div>
           <div class="name">義眼</div>
         </div>
         <div class="hito" @click="storeCount = 4" v-show="unlockContent > 3">
           <div class="icon">
+            <div class="new" v-if="yets.get(4)"></div>
             <img src="/UI/phone/portraits/portrait3.png">
           </div>
           <div class="name">大明</div>
@@ -48,7 +52,7 @@
 
 <script setup>
 import { useSpring } from "lingo3d-vue";
-import { onBeforeUnmount, onMounted, ref } from "vue";
+import { onBeforeUnmount, onMounted, ref,reactive } from "vue";
 
 import Content from '../content.vue'
 
@@ -58,13 +62,23 @@ defineProps(["phoneOn"]);
 const storeCount = ref(0)
 const unlockContent = ref(0)
 
+//定义显示有新消息的Map
+const yets = reactive(new Map([[1,true],[2,true],[3,true],[4,true]]))
+
 onMounted(()=>{
   emitter.on('getmessage',()=>{
     unlockContent.value ++
   })
+
+  //设置为将map中的 n 状态为 boolean
+  emitter.on('changeyets',({n,sta})=>{
+    yets.set(n,sta)
+  })
 })
 onBeforeUnmount(()=>{
   emitter.off('getmessage')
+
+  emitter.off('changeyets')
 })
 </script>
 
@@ -146,6 +160,7 @@ onBeforeUnmount(()=>{
         justify-content: flex-start;
         align-items: center;
         .icon {
+          position: relative;
           height: 70px;
           width: 70px;
           // background-color: antiquewhite;
@@ -155,6 +170,24 @@ onBeforeUnmount(()=>{
             width: 100%;
             display: block;
             border-radius: 10px;
+          }
+          .new{
+            height: 15px;
+            width: 15px;
+            position: absolute;
+            background-color: red;
+            border-radius: 50%;
+            right: -7.5px;
+            top: -7.5px;
+            text-align: center;
+            // line-height: 30px;
+            &::after{
+              // content: '...';
+              color: #fff;
+              display: block;
+              height: 20px;
+              line-height: 12px;
+            }
           }
         }
         .name {
