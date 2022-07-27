@@ -34,6 +34,16 @@ const progress = usePreload(
     "/UI/book/fro.png",
     "/UI/book/claw.png",
     "/UI/book/close.png",
+    "/UI/book/news/img1.webp",
+    "/UI/book/news/img2.webp",
+    "/UI/book/news/img3.webp",
+    "/UI/book/news/img2-1.webp",
+    "/UI/book/news/img2-2.webp",
+    "/UI/book/news/img3-1.webp",
+    "/UI/book/news/img3-2.webp",
+    "/UI/book/news/img3-3.webp",
+    "/UI/book/news/img4-1.webp",
+    "/UI/book/news/img4-2.webp",
     "/UI/icon2.webp",
     "/UI/icon3.webp",
     "/UI/icon4.webp",
@@ -43,6 +53,11 @@ const progress = usePreload(
     "/UI/login/portrait1.png",
     "/UI/login/camera.png",
     "/fonts/hwhp.ttf",
+
+    "/UI/bag/btn.png",
+    "/UI/bag/item-bc.png",
+    "/UI/bag/book.png",
+    "/UI/bag/phone.png",
   ],
   "35.42MB"
 );

@@ -795,7 +795,7 @@ onBeforeUnmount(() => {
         :depth="100"
         :scaleX="-0.82"
         :scaleZ="0.19"
-        src="svg/arrow.svg"
+        src="/svg/arrow.svg"
         color="#ff4e4e"
         :x="arrow.x"
         :y="arrow.y + 150"
@@ -822,10 +822,10 @@ onBeforeUnmount(() => {
         outlineColor="#ffffff"
         outlineHiddenColor="#db827f"
         :outlinePulse="2000"
-        defaultLight="env/sunset_fairway_4k.hdr"
+        defaultLight="/env/sunset_fairway_4k.hdr"
         :defaultLightScale="1"
         :exposure="0.5"
-        skybox="env/env1.hdr"
+        skybox="/env/env1.hdr"
         defaultFog="#000000"
         :bloom="bloom"
         :bloomStrength="1.1"
@@ -1473,7 +1473,7 @@ onBeforeUnmount(() => {
                 accept="image/*"
               />
               <img :src="form2.portrait" v-if="form2.portrait"/>
-              <img :src="signStatus == 'student'?'UI/login/portrait0.png':'UI/login/portrait1.png'" v-else/>
+              <img :src="signStatus == 'student'?'/UI/login/portrait0.png':'/UI/login/portrait1.png'" v-else/>
               <img class="camera" src="/UI/login/camera.png" />
             </a>
           </div>
