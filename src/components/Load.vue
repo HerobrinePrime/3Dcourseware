@@ -26,10 +26,14 @@ const progress = usePreload(
     "/svg/arrow.svg",
     "/env/sunset_fairway_4k.hdr",
     "/env/env1.hdr",
+
     "/UI/icon1.webp",
     "/UI/icon2.webp",
     "/UI/icon3.webp",
     "/UI/icon4.webp",
+
+    "/UI/porter.png",
+
     "/UI/book/bot.png",
     "/UI/book/fro.png",
     "/UI/book/claw.png",
@@ -70,7 +74,7 @@ const progress = usePreload(
     "/UI/phone/right.png",
     "/UI/phone/button.png"
   ],
-  "35.42MB"
+  "59.8MB"
 );
 
 const loaded = computed(() => {
