@@ -424,7 +424,7 @@ onBeforeUnmount(() => {
       :x="2516.17"
       :z="3628.5"
       :rotationY="-50"
-      :hanashi="0"
+      :hanashi="2"
       src="pig-with-sunglass.fbx"
     />
 
@@ -432,7 +432,7 @@ onBeforeUnmount(() => {
       :x="1932.59"
       :z="1130.64"
       :rotationY="40.44"
-      :hanashi="1"
+      :hanashi="0"
       src="pig-with-sunglass.fbx"
     />
 
@@ -440,30 +440,22 @@ onBeforeUnmount(() => {
       :x="-3406.15"
       :z="-3241.15"
       :rotationY="-18.99"
-      :hanashi="2"
+      :hanashi="1"
       src="rabbit-with-yellow-skin.glb"
-      :theThirdKey="true"
-    /><!-- theThirdKey -->
-
-    <Character
-      :x="-3678.25"
-      :z="981.37"
-      :rotationY="117.02"
-      :hanashi="3"
-      src="tigger-with-orange-skin.glb"
     />
 
-    <!-- kaiwa -->
+    <!-- kaiwa --><!-- theForthKey --><!-- theThirdKey -->
     <Characters
-      :x1="2780.14"
-      :z1="3475.95"
-      :rotationY1="-175.0"
-      src1="dog-with-black-tail.glb"
-      :x2="2792.93"
-      :z2="3113.63"
-      :rotationY2="-15.59"
-      :kaiwa="1"
-      src2="rabbit-with-sunglass.glb"
+      :x1="-1371.83"
+      :z1="-145.50"
+      :rotationY1="183.20"
+      src1="rabbit-with-wise-eyes.glb"
+      :x2="-1345.66"
+      :z2="-518.94"
+      :rotationY2="-20.56"
+      :kaiwa="0"
+      src2="tigger-with-orange-skin.glb"
+      :theForthKey="true"
     />
 
     <Characters
@@ -474,10 +466,46 @@ onBeforeUnmount(() => {
       :x2="765.42"
       :z2="-1569.26"
       :rotationY2="-35.44"
-      :kaiwa="2"
+      :kaiwa="1"
       src2="dog-with-brown-fur.glb"
-      :theForthKey="true"
-    /><!-- theForthKey -->
+    />
+
+    <Characters
+      :x1="-3382.70"
+      :z1="1457.65"
+      :rotationY1="-154.87"
+      src1="pig-with-pink-skin.glb"
+      :x2="-3597.46"
+      :z2="1147.27"
+      :rotationY2="42.57"
+      :kaiwa="2"
+      src2="dog-with-black-tail.glb"
+    />
+
+    <Characters
+      :x1="180.76"
+      :z1="2140.68"
+      :rotationY1="-175.00"
+      src1="rabbit-with-yellow-skin.glb"
+      :x2="193.55"
+      :z2="1778.36"
+      :rotationY2="-15.59"
+      :kaiwa="3"
+      src2="rabbit-with-sunglass.glb"
+      :theThirdKey="true"
+    />
+
+    <Characters
+      :x1="-3219.04"
+      :z1="-820.17"
+      :rotationY1="116.32"
+      src1="cat-with-orange-skin.glb"
+      :x2="-2932.59"
+      :z2="-940.67"
+      :rotationY2="-68.86"
+      :kaiwa="4"
+      src2="dog-with-brown-fur.glb"
+    />
 
     <AmbientLight />
     <SvgMesh
