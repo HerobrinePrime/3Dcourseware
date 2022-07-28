@@ -24,6 +24,7 @@ declare module '@vue/runtime-core' {
     RouterView: typeof import('vue-router')['RouterView']
     Screen: typeof import('./src/components/Screen.vue')['default']
     SelectPanel: typeof import('./src/components/SelectPanel.vue')['default']
+    Setumei: typeof import('./src/components/Setumei.vue')['default']
     States: typeof import('./src/components/main/states.vue')['default']
   }
 }

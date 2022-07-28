@@ -1,5 +1,10 @@
 <template>
   <div class="states" :class="{ 'panel-off': active ,'hidden': hidden}" >
+  <teleport to='body'>
+    <Transition name="el-fade-in-linear">
+      <Setumei v-if="setumeiPanelOn" :akashi="akashi"/>
+    </Transition>
+  </teleport>
     <div class="button">
       <img src="/UI/bag/btn.png" @click="store.commit('BAGCHANGE',!active)">
     </div>
@@ -9,38 +14,38 @@
     <div class="items" @click="bag.thebook">
       <img class="item-bc" src="/UI/bag/item-bc.png" />
       <div class="item has-item">
-        <img src="/UI/bag/book.png" />
+        <img src="/UI/bag/book.png" @mouseover="setumeiOn('/UI/bag/book.png')" @mouseleave="setumeiOff"/>
       </div>
     </div>
     <div class="items" @click="bag.thephone">
       <img class="item-bc" src="/UI/bag/item-bc.png" />
       <div class="item has-item" :class="{'shake':shaking}">
-        <img src="/UI/bag/phone.png" />
+        <img src="/UI/bag/phone.png" @mouseover="setumeiOn('/UI/bag/phone.png')" @mouseleave="setumeiOff"/>
       </div>
     </div>
 
     <div class="items">
       <img class="item-bc" src="/UI/bag/item-bc.png" />
       <div class="item " :class="{'has-item':keyItem > 0}">
-        <img :src="treasureArray[0]" />
+        <img :src="treasureArray[0]" @mouseover="setumeiOn(treasureArray[0])" @mouseleave="setumeiOff"/>
       </div>
     </div>
     <div class="items">
       <img class="item-bc" src="/UI/bag/item-bc.png" />
       <div class="item " :class="{'has-item':keyItem > 1}">
-        <img :src="treasureArray[1]" />
+        <img :src="treasureArray[1]" @mouseover="setumeiOn(treasureArray[1])" @mouseleave="setumeiOff"/>
       </div>
     </div>
     <div class="items">
       <img class="item-bc" src="/UI/bag/item-bc.png" />
       <div class="item " :class="{'has-item':keyItem > 2}">
-        <img :src="treasureArray[2]" />
+        <img :src="treasureArray[2]" @mouseover="setumeiOn(treasureArray[2])" @mouseleave="setumeiOff"/>
       </div>
     </div>
     <div class="items">
       <img class="item-bc" src="/UI/bag/item-bc.png" />
       <div class="item " :class="{'has-item':keyItem > 3}">
-        <img :src="treasureArray[3]" />
+        <img :src="treasureArray[3]" @mouseover="setumeiOn(treasureArray[3])" @mouseleave="setumeiOff"/>
       </div>
     </div>
 
@@ -57,6 +62,7 @@
       </div>
     </div>
   </div>
+
 </template>
 
 <script >
@@ -67,18 +73,37 @@ import {
   ref,
   watch,
   TransitionGroup,
+  Transition,
   onBeforeUnmount,
 } from "vue";
+import Setumei from '../Setumei.vue'
 import { useStore } from "vuex";
 import emitter from "../../eventBus.js";
 
 export default {
   props:['hidden'],
+  components:['Transition','Setumei'],
   setup(props) {
     const store = useStore();
     const stuInfo = computed(() => {
       return store.state.student;
     });
+
+    const setumeiPanelOn = ref(false)
+    let timer = undefined
+    const akashi = ref('')
+    const setumeiOn = (sign)=>{
+      if(!sign) return
+      timer = setTimeout(()=>{
+        setumeiPanelOn.value = true
+      },500)
+      //sign
+      akashi.value = sign
+    }
+    const setumeiOff = ()=>{
+      setumeiPanelOn.value = false
+      clearTimeout(timer)
+    }
 
     const active = computed(() => {
       return store.state.bag.bagOn;
@@ -148,6 +173,10 @@ export default {
       keys,
       keyItem,
       treasureArray,
+      setumeiPanelOn,
+      setumeiOn,
+      setumeiOff,
+      akashi,
     };
   },
 };
