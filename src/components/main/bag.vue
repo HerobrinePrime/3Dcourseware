@@ -1,8 +1,10 @@
 <template>
   <div class="states" :class="{ 'panel-off': active ,'hidden': hidden}" >
+  <teleport to='body'>
     <Transition name="el-fade-in-linear">
       <Setumei v-if="setumeiPanelOn" :akashi="akashi"/>
     </Transition>
+  </teleport>
     <div class="button">
       <img src="/UI/bag/btn.png" @click="store.commit('BAGCHANGE',!active)">
     </div>

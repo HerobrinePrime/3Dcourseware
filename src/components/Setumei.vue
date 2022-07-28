@@ -18,9 +18,10 @@ const {akashi} = defineProps(['akashi'])
   width: 600px;
   position: absolute;
   background-color: antiquewhite;
-  left: -600px;
+  left: 0;
+  right: 0;
   top: 0;
   bottom: 0;
-  margin: auto 0;
+  margin: auto;
 }
 </style>
