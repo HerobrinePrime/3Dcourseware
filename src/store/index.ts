@@ -1,8 +1,11 @@
 import { createStore } from "vuex";
 import { request } from '../request/index.js'
 
+// console.log(window);
+
 export default createStore({
     state: {
+        // window,
         x: 0,
         y: 400,
         z: 0,

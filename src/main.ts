@@ -34,3 +34,7 @@ app.use(ElementPlus)
 app.use(store)
 app.use(router)
 app.mount('#app')
+
+// window.addEventListener('scroll',()=>{
+//     console.log("main.ts"); 
+// })

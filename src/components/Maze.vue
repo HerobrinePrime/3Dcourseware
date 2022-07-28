@@ -70,6 +70,10 @@ import Challenge from "./challenge/challenge.vue";
 const store = useStore();
 const router = useRouter();
 
+window.onmousewheel = ()=>{
+  console.log("maze onmousewheel");
+}
+
 //treasure
 // #region
 //y anime
@@ -327,6 +331,7 @@ onBeforeUnmount(() => {
       :minPolarAngle="camera_springMinPolarAngle"
       :maxPolarAngle="camera_springMaxPolarAngle"
       :bokeh="orbitCamera.bokeh"
+      :fov="orbitCamera.fov"
     >
       <!-- :autoRotate="orbitCamera.autoRotate && !running" -->
       <Model

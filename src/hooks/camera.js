@@ -36,6 +36,8 @@ const orbitCamera = reactive({
     enableZoom: false,
 
     bokeh: false,
+
+    fov:ref(75)
 })
 
 const orbitCameraInstance = ref();
