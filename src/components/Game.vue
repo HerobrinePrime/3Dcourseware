@@ -78,6 +78,7 @@ import {
   camera_springInnerRotationX,
   camera_springMinPolarAngle,
   camera_springMaxPolarAngle,
+  fov,
 } from "../hooks/camera.js";
 
 import {
@@ -96,6 +97,18 @@ import { changeScene } from "../hooks/sceneController.js";
 import { useStore,mapState } from "vuex";
 import emitter from "../eventBus.js";
 //#endregion
+
+//fov control
+window.onmousewheel = (e)=>{
+  if(e.wheelDelta > 0){
+    if(orbitCamera.fov <= 40) return
+    orbitCamera.fov -= 2
+  }
+  else{
+    if(orbitCamera.fov >= 100) return
+    orbitCamera.fov += 2
+  }
+}
 
 console.log(mapState(['student']));
 
@@ -549,6 +562,7 @@ onBeforeUnmount(() => {
 
       <!-- orbitcamera -->
       <OrbitCamera
+      :fov="fov"
         active
         ref="orbitCameraInstance"
         :x="orbitCamera.x"

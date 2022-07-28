@@ -51,6 +51,7 @@ import {
   camera_springInnerRotationX,
   camera_springMinPolarAngle,
   camera_springMaxPolarAngle,
+  fov,
 } from "../hooks/camera.js";
 import { arrow } from "../hooks/arrow.js";
 // import { treasureEnter,treasure1,treasure2, } from "../hooks/mazeHooks/treasure.js"//treasure hook
@@ -70,8 +71,16 @@ import Challenge from "./challenge/challenge.vue";
 const store = useStore();
 const router = useRouter();
 
-window.onmousewheel = ()=>{
-  console.log("maze onmousewheel");
+//fov control
+window.onmousewheel = (e)=>{
+  if(e.wheelDelta > 0){
+    if(orbitCamera.fov <= 40) return
+    orbitCamera.fov -= 2
+  }
+  else{
+    if(orbitCamera.fov >= 100) return
+    orbitCamera.fov += 2
+  }
 }
 
 //treasure
@@ -331,7 +340,7 @@ onBeforeUnmount(() => {
       :minPolarAngle="camera_springMinPolarAngle"
       :maxPolarAngle="camera_springMaxPolarAngle"
       :bokeh="orbitCamera.bokeh"
-      :fov="orbitCamera.fov"
+      :fov="fov"
     >
       <!-- :autoRotate="orbitCamera.autoRotate && !running" -->
       <Model

@@ -37,7 +37,7 @@ const orbitCamera = reactive({
 
     bokeh: false,
 
-    fov:ref(75)
+    fov:75
 })
 
 const orbitCameraInstance = ref();
@@ -141,6 +141,14 @@ const resetView = () => {
     orbitCamera.maxPolarAngle = 105
 }
 
+const computedFov = computed(()=>{
+    return orbitCamera.fov
+})
+const fov = useSpring({
+    to:computedFov,
+    bounce:0
+})
+
 export {
     orbitCamera,
     orbitCameraInstance,
@@ -155,4 +163,6 @@ export {
 
     camera_springMinPolarAngle,
     camera_springMaxPolarAngle,
+
+    fov,
 }

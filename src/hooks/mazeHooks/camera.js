@@ -6,6 +6,7 @@ const cameraPosition = reactive({
     x: 64.55,
     y: 102.33,
     z: -84.55,
+    fov:75,
 })
 
 const autoRotate = ref(false)
