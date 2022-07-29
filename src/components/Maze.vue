@@ -16,6 +16,7 @@ import {
   SvgMesh,
   Dummy,
   HTML,
+  Find,
   Cube,
   useAnimation,
   Sprite,
@@ -364,8 +365,6 @@ onBeforeUnmount(() => {
     </OrbitCamera>
     <Model
       name="map"
-      physics="map"
-      @click="mapOnClick"
       :x="-781.76"
       :y="472.0"
       :z="187.75"
@@ -373,7 +372,10 @@ onBeforeUnmount(() => {
       :depth="218.19"
       :scale="11"
       src="/models/maze.glb"
-    />
+      physics="map"
+    >
+      <Find name="road"  @click="mapOnClick"/>
+    </Model>
 
     <!-- treasure -->
     <!-- 1 -->
