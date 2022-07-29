@@ -134,13 +134,23 @@ store.dispatch("testToken", localStorage.getItem("token")).then(({ code }) => {
   }
 });
 
+//msg triggers
+const msg1 = ref()
+const msg2 = ref()
+const msg3 = ref()
+const msg4 = ref()
+
 //控件
 const mapOn = ref(true);
 const getKey = (key) => {
   store.commit("GETKEY", key);
 };
 const times = reactive(new Set());
-const getMessage = () => {
+const getMessage = (num) => {
+  if(num == 1) msg1.value.onEnter = undefined
+  if(num == 2) msg2.value.onEnter = undefined
+  if(num == 3) msg3.value.onEnter = undefined
+  if(num == 4) msg4.value.onEnter = undefined
   //清除times
   clearTimes();
 
@@ -414,16 +424,6 @@ onBeforeUnmount(() => {
       targetIds="character"
       @enter="treasureEnter(1)"
     />
-    <!-- <Cylinder 
-      :x="-87.3"
-      :y="22.84"
-      :z="-59.77"
-      :width="240.00"
-      :height="18.50"
-      :depth="240.00"
-      :opacity="0.5"
-      :opacityFactor="1"
-    /> -->
     <!-- 2 -->
     <Sprite
       ref="treasure2"
@@ -534,6 +534,19 @@ onBeforeUnmount(() => {
       :rotationY2="-68.86"
       :kaiwa="4"
       src2="dog-with-brown-fur.glb"
+    />
+
+    <!-- getMessage Trigger-->
+    <!-- function getMessage -->
+    <Trigger 
+      ref="msg1"
+      pad
+      :x="-2356.37"
+      :y="40"
+      :z="-2165.82"
+      targetIds="character"
+      :radius="240"
+      @enter="getMessage(1)"
     />
 
     <AmbientLight />
