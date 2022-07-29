@@ -394,9 +394,9 @@ onBeforeUnmount(() => {
     <!-- 1 -->
     <Sprite
       ref="treasure1"
-      :x="-87.3"
+      :x="-2455.99"
       :y="yAnime"
-      :z="-59.77"
+      :z="1766.59"
       :width="60"
       :height="60"
       texture="/UI/defence/treasure1.png"
@@ -407,9 +407,9 @@ onBeforeUnmount(() => {
     />
     <Trigger
       pad
-      :x="-87.3"
+      :x="-2455.99"
       :y="20"
-      :z="-59.77"
+      :z="1766.59"
       :radius="120"
       targetIds="character"
       @enter="treasureEnter(1)"
@@ -427,9 +427,9 @@ onBeforeUnmount(() => {
     <!-- 2 -->
     <Sprite
       ref="treasure2"
-      :x="-400"
+      :x="-127.66"
       :y="yAnime"
-      :z="-59.77"
+      :z="-119.60"
       :width="60"
       :height="60"
       texture="/UI/defence/treasure2.png"
@@ -440,9 +440,9 @@ onBeforeUnmount(() => {
     />
     <Trigger
       pad
-      :x="-400"
+      :x="-127.66"
       :y="20"
-      :z="-59.77"
+      :z="-119.60"
       :radius="120"
       targetIds="character"
       @enter="treasureEnter(2)"
