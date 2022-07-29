@@ -1,6 +1,6 @@
 <template>
   <transition name="news">
-    <div class="news" v-if="newsOn">
+    <div class="news" v-if="newsOn"  @mousewheel.stop="">
       <img class="bot" src="/UI/book/bot.png" />
       <div
         class="label"
