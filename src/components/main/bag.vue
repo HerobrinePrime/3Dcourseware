@@ -1,8 +1,8 @@
 <template>
-  <div class="states" :class="{ 'panel-off': active ,'hidden': hidden}" >
+  <div class="states" :class="{ 'panel-off': active ,'hidden': hidden}"  @mousewheel.stop="">
   <teleport to='body'>
     <Transition name="el-fade-in-linear">
-      <Setumei v-if="setumeiPanelOn" :akashi="akashi"/>
+      <Setumei v-if="setumeiPanelOn" :akashi="akashi"  @mousewheel.stop=""/>
     </Transition>
   </teleport>
     <div class="button">

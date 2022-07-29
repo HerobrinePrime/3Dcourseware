@@ -1,5 +1,5 @@
 <template>
-  <div class="phone" :class="{ off: !phoneOn }">
+  <div class="phone" :class="{ off: !phoneOn }" @mousewheel.stop="">
     <div class="body">
       <!-- ['アカツキ','セイバー','義眼','大明'] -->
       <div class="contact">
