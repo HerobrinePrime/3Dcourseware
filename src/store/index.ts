@@ -85,7 +85,7 @@ export default createStore({
                 { c: false, kotoba: '行，谢谢你' },
             ],
         ],
-        //決定事項 3
+        //決定事項 3 4
         //固定 1 <--> 4
         constContent: [
             //固定1
