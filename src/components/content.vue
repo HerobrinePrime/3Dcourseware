@@ -131,10 +131,17 @@ const kanryou = () => {
       console.log("成功防范");
       //请求清除记录
       dispatch("defenced", props.sign);
+
     } else {
       console.log("失败防范");
       //请求记录失败防范
       dispatch("undefenced", props.sign);
+      
+      //显示一些提示，表示失败
+
+      setTimeout(()=>{
+        emitter.emit('failure')
+      },800)
     }
   }, 1200);
 };

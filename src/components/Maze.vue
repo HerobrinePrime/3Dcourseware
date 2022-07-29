@@ -286,6 +286,12 @@ onMounted(() => {
   emitter.on("gettreasure", (num) => {
     getTreasure(num);
   });
+
+  //failure teleport to save point
+  emitter.on("failure",()=>{
+    phoneOn.value = false
+    theTrigger()
+  })
 });
 onBeforeUnmount(() => {
   emitter.off("thebook");
@@ -296,6 +302,8 @@ onBeforeUnmount(() => {
   emitter.off("lookat");
 
   emitter.off("gettreasure");
+
+  emitter.off("failure")
 });
 </script>
 

@@ -499,6 +499,7 @@ const Maze = ()=>{
     bright.value = true
     sprite.onLoop = ()=>{
       sprite.scale += 0.3
+      sprite.width += 0.3
       if(sprite.scale >= 30) {
         sprite.onLoop = undefined
         fade.value = true
