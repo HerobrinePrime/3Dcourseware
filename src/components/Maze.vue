@@ -437,9 +437,9 @@ onBeforeUnmount(() => {
 
     <!-- hanashi -->
     <Character
-      :x="2516.17"
-      :z="3628.5"
-      :rotationY="-50"
+      :x="2218.85"
+      :z="3518.51"
+      :rotationY="-54.00"
       :hanashi="2"
       src="pig-with-sunglass.fbx"
     />
