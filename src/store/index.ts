@@ -85,17 +85,15 @@ export default createStore({
                 { c: false, kotoba: '行，谢谢你' },
             ],
         ],
-        //固定
+        //固定 1 <--> 3
         constContent: [
             //固定1
             [
-                { jibun: false, kotoba: '在吗，有急事，我姐姐刚刚突然出了车祸，现在在医院里抢救', },
-                { jibun: true, kotoba: '怎么会这样，她还好吗', },
-                { jibun: false, kotoba: '很严重，现在还没醒过来', },
-                { jibun: true, kotoba: '医生怎么说', },
-                { jibun: false, kotoba: '医生说要先交费才能做手术，我爸妈不在身边，我身上钱不够，急需手术费', },
-                { jibun: true, kotoba: '大概要多少', },
-                { jibun: false, kotoba: '2000左右吧，我到时候肯定会还你', },
+                {jibun:false,kotoba:'你好，我们最近在找暑假工，薪资日结，可以赚很多零花钱，很适合学生'},
+                {jibun:true,kotoba:'真的吗，你不会是在骗我吧'},
+                {jibun:false,kotoba:'怎么会呢，我们这边很需要你这样的学生'},
+                {jibun:true,kotoba:'那我要怎么做'},
+                {jibun:false,kotoba:'只需要帮我们刷刷单量，就可以给你提成，越到后面越多'},
             ],
             //固定2
             [
@@ -107,11 +105,13 @@ export default createStore({
             ],
             //固定3
             [
-                {jibun:false,kotoba:'你好，我们最近在找暑假工，薪资日结，可以赚很多零花钱，很适合学生'},
-                {jibun:true,kotoba:'真的吗，你不会是在骗我吧'},
-                {jibun:false,kotoba:'怎么会呢，我们这边很需要你这样的学生'},
-                {jibun:true,kotoba:'那我要怎么做'},
-                {jibun:false,kotoba:'只需要帮我们刷刷单量，就可以给你提成，越到后面越多'},
+                { jibun: false, kotoba: '在吗，有急事，我姐姐刚刚突然出了车祸，现在在医院里抢救', },
+                { jibun: true, kotoba: '怎么会这样，她还好吗', },
+                { jibun: false, kotoba: '很严重，现在还没醒过来', },
+                { jibun: true, kotoba: '医生怎么说', },
+                { jibun: false, kotoba: '医生说要先交费才能做手术，我爸妈不在身边，我身上钱不够，急需手术费', },
+                { jibun: true, kotoba: '大概要多少', },
+                { jibun: false, kotoba: '2000左右吧，我到时候肯定会还你', },
             ],
             //固定4
             [
@@ -124,11 +124,15 @@ export default createStore({
                 {jibun:false,kotoba:'怎么回事，我这边检测到你的账户涉嫌盗刷皮肤，不仅没法领取还会被冻结，警察还会找上门，这个后果可是十分严重的'},
             ]
         ],
-        //无防范
+        //无防范 1 <--> 3
         undefencableContent: [
             //无防范1
             [
-                { jibun: true, kotoba: '好吧，救人要紧，我给你转', },
+                { jibun: true, kotoba: '这个可靠吗' },
+                { jibun: false, kotoba: '放心好了，我们这边有好多像你这样的学生都赚了不少钱' },
+                { jibun: true, kotoba: '原来赚钱这么简单' },
+                { jibun: false, kotoba: '对啊，所以尽快加入我们吧' },
+                { jibun: true, kotoba: '好' },
             ],
             //无防范2
             [
@@ -136,11 +140,7 @@ export default createStore({
             ],
             //无防范3
             [
-                { jibun: true, kotoba: '这个可靠吗' },
-                { jibun: false, kotoba: '放心好了，我们这边有好多像你这样的学生都赚了不少钱' },
-                { jibun: true, kotoba: '原来赚钱这么简单' },
-                { jibun: false, kotoba: '对啊，所以尽快加入我们吧' },
-                { jibun: true, kotoba: '好' },
+                { jibun: true, kotoba: '好吧，救人要紧，我给你转', },
             ],
             //无防范4
             [
@@ -149,17 +149,12 @@ export default createStore({
                 {jibun:true,kotoba:'好'},
             ],
         ],
-        //有防范
+        //有防范 1 <--> 3
         defencableContent: [
             //有防范1
             [
-                {jibun:true,kotoba:'行，你在哪个医院啊，我和我家里人过去看看'},
-                {jibun:false,kotoba:'就在省医院这，急诊科'},
-                {jibun:true,kotoba:'可是你昨天晚上刚和我说在外面和家里人旅游啊'},
-                {jibun:false,kotoba:'家里有点事突然回来了，路上就出了事故'},
-                {jibun:true,kotoba:'好吧，周末一起出去玩的计划只好泡汤了'},
-                {jibun:false,kotoba:'本来和你约好的，没办法，我得照顾姐姐，你快点把钱转我吧'},
-                {jibun:true,kotoba:'可是我们并没有约定周末出去玩，你就是骗子！'},
+                {jibun:true,kotoba:`先让我尝尝甜头，后面金额越来越大，骗我越来越深啊
+我看过新闻，你就是在诈骗，你就是个骗子！`}
             ],
             //有防范2
             [
@@ -169,8 +164,13 @@ export default createStore({
             ],
             //有防范3
             [
-                {jibun:true,kotoba:`先让我尝尝甜头，后面金额越来越大，骗我越来越深啊
-我看过新闻，你就是在诈骗，你就是个骗子！`}
+                {jibun:true,kotoba:'行，你在哪个医院啊，我和我家里人过去看看'},
+                {jibun:false,kotoba:'就在省医院这，急诊科'},
+                {jibun:true,kotoba:'可是你昨天晚上刚和我说在外面和家里人旅游啊'},
+                {jibun:false,kotoba:'家里有点事突然回来了，路上就出了事故'},
+                {jibun:true,kotoba:'好吧，周末一起出去玩的计划只好泡汤了'},
+                {jibun:false,kotoba:'本来和你约好的，没办法，我得照顾姐姐，你快点把钱转我吧'},
+                {jibun:true,kotoba:'可是我们并没有约定周末出去玩，你就是骗子！'},
             ],
             //有防范4
             [
