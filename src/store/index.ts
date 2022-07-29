@@ -85,15 +85,18 @@ export default createStore({
                 { c: false, kotoba: '行，谢谢你' },
             ],
         ],
-        //固定 1 <--> 3
+        //決定事項 3
+        //固定 1 <--> 4
         constContent: [
             //固定1
             [
-                {jibun:false,kotoba:'你好，我们最近在找暑假工，薪资日结，可以赚很多零花钱，很适合学生'},
-                {jibun:true,kotoba:'真的吗，你不会是在骗我吧'},
-                {jibun:false,kotoba:'怎么会呢，我们这边很需要你这样的学生'},
-                {jibun:true,kotoba:'那我要怎么做'},
-                {jibun:false,kotoba:'只需要帮我们刷刷单量，就可以给你提成，越到后面越多'},
+                {jibun:false,kotoba:'哈喽，王者荣耀最近有免费送皮肤的活动，参加的就能得到好几款限定皮肤，你要参加吗'},
+                {jibun:true,kotoba:'真的吗，这么好，我想要那个皮肤好久了'},
+                {jibun:false,kotoba:'对啊，好不容易返场，机会很难得，好多小伙伴都领到了'},
+                {jibun:true,kotoba:'需要我做什么啊'},
+                {jibun:false,kotoba:'只需要用微信扫这个二维码填一下游戏账户的信息就会发送到你的账号里了'},
+                {jibun:true,kotoba:'我扫完了然后呢'},
+                {jibun:false,kotoba:'怎么回事，我这边检测到你的账户涉嫌盗刷皮肤，不仅没法领取还会被冻结，警察还会找上门，这个后果可是十分严重的'},
             ],
             //固定2
             [
@@ -115,24 +118,20 @@ export default createStore({
             ],
             //固定4
             [
-                {jibun:false,kotoba:'哈喽，王者荣耀最近有免费送皮肤的活动，参加的就能得到好几款限定皮肤，你要参加吗'},
-                {jibun:true,kotoba:'真的吗，这么好，我想要那个皮肤好久了'},
-                {jibun:false,kotoba:'对啊，好不容易返场，机会很难得，好多小伙伴都领到了'},
-                {jibun:true,kotoba:'需要我做什么啊'},
-                {jibun:false,kotoba:'只需要用微信扫这个二维码填一下游戏账户的信息就会发送到你的账号里了'},
-                {jibun:true,kotoba:'我扫完了然后呢'},
-                {jibun:false,kotoba:'怎么回事，我这边检测到你的账户涉嫌盗刷皮肤，不仅没法领取还会被冻结，警察还会找上门，这个后果可是十分严重的'},
-            ]
+                {jibun:false,kotoba:'你好，我们最近在找暑假工，薪资日结，可以赚很多零花钱，很适合学生'},
+                {jibun:true,kotoba:'真的吗，你不会是在骗我吧'},
+                {jibun:false,kotoba:'怎么会呢，我们这边很需要你这样的学生'},
+                {jibun:true,kotoba:'那我要怎么做'},
+                {jibun:false,kotoba:'只需要帮我们刷刷单量，就可以给你提成，越到后面越多'},
+            ],
         ],
-        //无防范 1 <--> 3
+        //无防范 1 <--> 4
         undefencableContent: [
             //无防范1
             [
-                { jibun: true, kotoba: '这个可靠吗' },
-                { jibun: false, kotoba: '放心好了，我们这边有好多像你这样的学生都赚了不少钱' },
-                { jibun: true, kotoba: '原来赚钱这么简单' },
-                { jibun: false, kotoba: '对啊，所以尽快加入我们吧' },
-                { jibun: true, kotoba: '好' },
+                {jibun:true,kotoba:'我没有啊，那我该怎么办，快告诉我'},
+                {jibun:false,kotoba:'我这边有技术人员帮你解决，只需要往这个账户里转3000块作为保证金就不会有什么事了'},
+                {jibun:true,kotoba:'好'},
             ],
             //无防范2
             [
@@ -144,17 +143,20 @@ export default createStore({
             ],
             //无防范4
             [
-                {jibun:true,kotoba:'我没有啊，那我该怎么办，快告诉我'},
-                {jibun:false,kotoba:'我这边有技术人员帮你解决，只需要往这个账户里转3000块作为保证金就不会有什么事了'},
-                {jibun:true,kotoba:'好'},
+                { jibun: true, kotoba: '这个可靠吗' },
+                { jibun: false, kotoba: '放心好了，我们这边有好多像你这样的学生都赚了不少钱' },
+                { jibun: true, kotoba: '原来赚钱这么简单' },
+                { jibun: false, kotoba: '对啊，所以尽快加入我们吧' },
+                { jibun: true, kotoba: '好' },
             ],
         ],
-        //有防范 1 <--> 3
+        //有防范 1 <--> 4
         defencableContent: [
             //有防范1
             [
-                {jibun:true,kotoba:`先让我尝尝甜头，后面金额越来越大，骗我越来越深啊
-我看过新闻，你就是在诈骗，你就是个骗子！`}
+                {jibun:true,kotoba:'那你现在把账号冻结了吧，反正也不是我的，我倒想看看会怎么样'},
+                {jibun:false,kotoba:'我这边有技术人员很快就会把你账号冻结，只需要往这个账户里转3000块作为保证金就不会有什么事了'},
+                {jibun:true,kotoba:'也好，等警察叔叔来，我问问你这样的骗子怎么处理'},
             ],
             //有防范2
             [
@@ -174,10 +176,9 @@ export default createStore({
             ],
             //有防范4
             [
-                {jibun:true,kotoba:'那你现在把账号冻结了吧，反正也不是我的，我倒想看看会怎么样'},
-                {jibun:false,kotoba:'我这边有技术人员很快就会把你账号冻结，只需要往这个账户里转3000块作为保证金就不会有什么事了'},
-                {jibun:true,kotoba:'也好，等警察叔叔来，我问问你这样的骗子怎么处理'},
-            ]
+                {jibun:true,kotoba:`先让我尝尝甜头，后面金额越来越大，骗我越来越深啊
+我看过新闻，你就是在诈骗，你就是个骗子！`}
+            ],
         ],
         //完成phone数量
         phoneCount:0
