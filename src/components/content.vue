@@ -120,6 +120,7 @@ const key = computed(() => {
 
 const done = ref(false);
 const kanryou = () => {
+  store.state.phoneCount ++
   done.value = true;
 
   setTimeout(() => {
@@ -131,17 +132,21 @@ const kanryou = () => {
       console.log("成功防范");
       //请求清除记录
       dispatch("defenced", props.sign);
+      //显示一些提示，表示成功
+
+      setTimeout(()=>{
+        emitter.emit('success')
+      },1500)
 
     } else {
       console.log("失败防范");
       //请求记录失败防范
       dispatch("undefenced", props.sign);
-      
       //显示一些提示，表示失败
 
       setTimeout(()=>{
         emitter.emit('failure')
-      },800)
+      },1500)
     }
   }, 1200);
 };

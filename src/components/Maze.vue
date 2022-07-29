@@ -292,6 +292,10 @@ onMounted(() => {
     phoneOn.value = false
     theTrigger()
   })
+  //success
+  emitter.on("success",()=>{
+    phoneOn.value = false
+  })
 });
 onBeforeUnmount(() => {
   emitter.off("thebook");
@@ -304,6 +308,7 @@ onBeforeUnmount(() => {
   emitter.off("gettreasure");
 
   emitter.off("failure")
+  emitter.off("success ")
 });
 </script>
 

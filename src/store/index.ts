@@ -179,7 +179,8 @@ export default createStore({
                 {jibun:true,kotoba:'也好，等警察叔叔来，我问问你这样的骗子怎么处理'},
             ]
         ],
-
+        //完成phone数量
+        phoneCount:0
     },
     actions: {
         //登录
