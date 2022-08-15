@@ -78,7 +78,7 @@
         </div>
       </div>
     </div>
-    <div class="typing" >{{typing?'Typing...':names[sign - 1]}}</div>
+    <div class="typing" >{{typing?'对方正在输入...':names[sign - 1]}}</div>
   </div>
 </template>
 

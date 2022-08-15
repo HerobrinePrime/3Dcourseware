@@ -181,7 +181,8 @@ export default createStore({
             ],
         ],
         //完成phone数量
-        phoneCount:0
+        phoneCount:0,
+        questions:new Map()
     },
     actions: {
         //登录
@@ -267,6 +268,20 @@ export default createStore({
                 }
             })
             console.log(res);
+        },
+
+        //getAllQuestions
+        async getAllQuestions({commit}){
+            let res = await request({
+                method:'POST',
+                url:'/student/getAllQuestions',
+            })
+            if(res.data.code == 200){
+                commit('QUESTIONS',res.data.data)
+            }
+            else{
+                //
+            }
         }
     },
     mutations: {
@@ -291,7 +306,11 @@ export default createStore({
         GETKEY(state, key) {
             state.bag.keys.add(key)
             state.defences.set(`key${key}`,true)
-        }
+        },
+        QUESTIONS(state,data){
+            state.questions = new Map(data)
+            console.log(state.questions);
+        },
     },
     getters: {
 

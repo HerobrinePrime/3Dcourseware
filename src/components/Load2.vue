@@ -6,6 +6,8 @@ import { usePreload } from "lingo3d-vue";
 import { Transition } from "@vue/runtime-dom";
 import Maze from "./Maze.vue";
 
+const { dispatch } = useStore();
+
 const progress = usePreload(
   [
     "/models/main/cat.fbx",
@@ -65,7 +67,7 @@ const progress = usePreload(
     "/UI/defence/treasure3.png",
     "/UI/defence/treasure4.png",
 
-    "/UI/map/map.png"
+    "/UI/map/map.png",
   ],
   "77.3MB"
 );
@@ -81,6 +83,10 @@ const started = ref(false);
 const getStart = () => {
   started.value = true;
 };
+
+onMounted(() => {
+  dispatch('getAllQuestions')
+});
 </script>
 
 <template>
