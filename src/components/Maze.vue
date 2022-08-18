@@ -306,6 +306,7 @@ onMounted(() => {
   emitter.on("success",()=>{
     phoneOn.value = false
   })
+
 });
 onBeforeUnmount(() => {
   emitter.off("thebook");
@@ -650,6 +651,27 @@ onBeforeUnmount(() => {
   >
     Map
   </button>
+    <button
+    class="test"
+    @click="editorOn = !editorOn"
+    style="position: absolute; right: 0; top: 150px; color: #fff"
+  >
+    editorOn
+  </button>
+  <button
+    class="test"
+    @click="emitter.emit('challenge')"
+    style="position: absolute; right: 0; top: 180px; color: #fff;z-index: 201;"
+  >
+    challengeOn
+  </button>
+  <!-- <button
+    class="test"
+    @click="getMessage"
+    style="position: absolute; right: 0; top: 180px; color: #fff"
+  >
+    getMessage
+  </button> -->
   <!-- <button
     class="test"
     @click="getKey(1)"
@@ -685,20 +707,6 @@ onBeforeUnmount(() => {
   >
     shake
   </button> -->
-  <button
-    class="test"
-    @click="editorOn = !editorOn"
-    style="position: absolute; right: 0; top: 150px; color: #fff"
-  >
-    editorOn
-  </button>
-  <button
-    class="test"
-    @click="getMessage"
-    style="position: absolute; right: 0; top: 180px; color: #fff"
-  >
-    getMessage
-  </button>
 
   <div style="position: absolute; z-index: -1; left: -50px">
     <img src="/UI/defence/treasure1.png" />

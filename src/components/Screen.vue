@@ -32,10 +32,10 @@ watch(props, async (n) => {
   if (!n.screenOn) return;
   await nextTick();
   const swiper = new Swiper(".screen", {
-    spaceBetween: 30,
+    spaceBetween: 300,
     effect: "fade",
     fadeEffect: {
-      crossFade: true,
+      crossFade: false,
     },
     speed: 2000,
     allowTouchMove: false,
@@ -81,7 +81,7 @@ onMounted(() => {});
     .screen-img {
       height: 100%;
       width: 100%;
-      background-color: rgba(250, 235, 215, 0.095);
+      background-color: #000;
       text-align: center;
       color: #fff;
 
@@ -95,6 +95,8 @@ onMounted(() => {});
         left: 0;
         right: 0;
         margin: auto;
+        width: 100%;
+
       }
     }
   }
@@ -102,14 +104,14 @@ onMounted(() => {});
   .next {
     position: absolute;
     z-index: 126;
-    bottom: 25px;
-    right: 25px;
+    bottom: 50px;
+    right: 40px;
     color: white;
     font-size: 50px;
     transition: opacity 0.8s ease;
     cursor: pointer;
     img{
-      height: 70px;
+      height: 80px;
     }
   }
   .b-enter-from,
