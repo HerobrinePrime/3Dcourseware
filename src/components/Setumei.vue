@@ -1,27 +1,36 @@
 <template>
   <div class="setumei">
-    <img :src="akashi">
-    {{akashi}}
+    <img :src="treasure">
   </div>
 </template>
 
 <script setup>
+import { computed } from "@vue/runtime-core"
+
 const {akashi} = defineProps(['akashi'])
+
+const treasure = computed(()=>{
+  const arr = akashi.split('/')
+  return `/UI/bag/introduction/${arr[arr.length - 1]}`
+})
 
 
 </script>
 
 <style lang="less" scoped>
 .setumei {
-  // display: none;
-  height: 600px;
-  width: 600px;
+  width: 900px;
+  height: 506px;
   position: absolute;
-  background-color: antiquewhite;
   left: 0;
   right: 0;
   top: 0;
   bottom: 0;
   margin: auto;
+  img{
+    display: block;
+    width: 900px;
+    height: 506px;
+  }
 }
 </style>

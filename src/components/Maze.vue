@@ -541,12 +541,45 @@ onBeforeUnmount(() => {
     <Trigger 
       ref="msg1"
       pad
-      :x="-2356.37"
+      :x="-1729.04"
       :y="40"
-      :z="-2165.82"
+      :z="-1531.72"
       targetIds="character"
       :radius="240"
       @enter="getMessage(1)"
+    />
+
+    <Trigger 
+      ref="msg2"
+      pad
+      :x="-3909.75"
+      :y="40"
+      :z="669.71"
+      targetIds="character"
+      :radius="240"
+      @enter="getMessage(2)"
+    />
+
+    <Trigger 
+      ref="msg3"
+      pad
+      :x="-932.05"
+      :y="40"
+      :z="-1531.06"
+      targetIds="character"
+      :radius="240"
+      @enter="getMessage(3)"
+    />
+
+    <Trigger 
+      ref="msg4"
+      pad
+      :x="1719.95"
+      :y="40"
+      :z="1610.11"
+      targetIds="character"
+      :radius="240"
+      @enter="getMessage(4)"
     />
 
     <AmbientLight />
