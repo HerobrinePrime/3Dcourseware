@@ -85,36 +85,38 @@ const getStart = () => {
 };
 
 onMounted(() => {
-  dispatch('getAllQuestions')
+  dispatch("getAllQuestions");
 });
 </script>
 
 <template>
   <Transition name="v1">
     <div class="bc" v-if="!started">
-      <div class="moji" v-if="!loaded">{{ Math.round(progress) }}%</div>
-      <div class="moji" v-else @click="getStart">Start</div>
+      <div class="wrapper">
+        <div class="moji" v-if="!loaded">{{ Math.round(progress) }}%</div>
+        <div class="moji" v-else @click="getStart">Start</div>
 
-      <div class="load-box">
-        <svg
-          xmlns="http://www.w3.org/2000/svg"
-          viewBox="0 0 46 46"
-          class="base"
-        >
-          <circle class="a" cx="23" cy="23" r="20" />
-        </svg>
-        <svg
-          xmlns="http://www.w3.org/2000/svg"
-          viewBox="0 0 46 46"
-          class="loader"
-          :style="{
-            strokeDashoffset: `calc(-2 * 3.1416 * 20 * (1 - ${
-              progress / 100
-            }))`,
-          }"
-        >
-          <circle class="a" cx="23" cy="23" r="20" />
-        </svg>
+        <div class="load-box">
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            viewBox="0 0 46 46"
+            class="base"
+          >
+            <circle class="a" cx="23" cy="23" r="20" />
+          </svg>
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            viewBox="0 0 46 46"
+            class="loader"
+            :style="{
+              strokeDashoffset: `calc(-2 * 3.1416 * 20 * (1 - ${
+                progress / 100
+              }))`,
+            }"
+          >
+            <circle class="a" cx="23" cy="23" r="20" />
+          </svg>
+        </div>
       </div>
     </div>
   </Transition>
@@ -176,52 +178,58 @@ onMounted(() => {
   background-size: cover;
   background-repeat: no-repeat;
   background-position: center;
-  .moji {
-    font-weight: bolder;
-    position: relative;
-    z-index: 7;
-    cursor: pointer;
-    color: #aaffee;
-    font-size: 30px;
-  }
-  .load-box {
+  .wrapper {
     height: 200px;
     width: 200px;
-    transition: 0.8s ease;
-    position: absolute;
-    z-index: 5;
-    right: 0;
-    top: -0;
-    left: 0;
-    bottom: 0;
-    margin: auto;
-    svg {
+    text-align: center;
+    line-height: 200px;
+    .moji {
+      font-weight: bolder;
+      position: relative;
+      z-index: 7;
+      cursor: pointer;
+      color: #aaffee;
+      font-size: 30px;
+    }
+    .load-box {
+      height: 200px;
+      width: 200px;
+      transition: 0.8s ease;
       position: absolute;
-      overflow: hidden;
-      backface-visibility: hidden;
-      circle {
+      z-index: 5;
+      right: 0;
+      top: -0;
+      left: 0;
+      bottom: 0;
+      margin: auto;
+      svg {
+        position: absolute;
         overflow: hidden;
-        transition: all 0.2s ease;
-        fill: none;
-        stroke: #43bcc7b5;
-        stroke-miterlimit: 10;
-        stroke-width: 2px;
         backface-visibility: hidden;
-        transition: stroke 1.1s ease;
+        circle {
+          overflow: hidden;
+          transition: all 0.2s ease;
+          fill: none;
+          stroke: #43bcc7b5;
+          stroke-miterlimit: 10;
+          stroke-width: 2px;
+          backface-visibility: hidden;
+          transition: stroke 1.1s ease;
+        }
+      }
+      .base {
+        opacity: 0.5;
+      }
+      .loader {
+        opacity: 1;
+        stroke-dasharray: calc(2 * 3.1416 * 20);
+        transform: rotateY(180deg);
+        animation-fill-mode: both;
+        transition: stroke-dashoffset 1s ease;
       }
     }
-    .base {
-      opacity: 0.5;
-    }
-    .loader {
-      opacity: 1;
-      stroke-dasharray: calc(2 * 3.1416 * 20);
-      transform: rotateY(180deg);
-      animation-fill-mode: both;
-      transition: stroke-dashoffset 1s ease;
-    }
+    animation: enter 1s ease forwards;
   }
-  animation: enter 1s ease forwards;
 }
 @keyframes enter {
   from {

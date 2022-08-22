@@ -9,6 +9,7 @@ import {
 } from "vue";
 import { useStore } from "vuex";
 import emitter from "../../eventBus";
+import { request } from "../../request";
 
 const challengeOn = ref(false);
 const model = ref(0); //0简单模式,1困难模式
@@ -39,6 +40,83 @@ const boss = reactive({
   remain: 0,
 });
 
+//activation
+const selected = reactive([]);
+const answer = (index) => {
+  if (selected.indexOf(index) == -1) {
+    //没选择这个
+    selected.push(index);
+  } else {
+    selected.splice(selected.indexOf(index), 1);
+  }
+};
+const commit = () => {
+  //round 
+  inRound.value = false
+  //计时器
+  clearInterval(timer);
+
+  //判断
+  let sign = true;
+  if (selected.length != question.question.answer.length) {
+    sign = false;
+  }
+  const seikai = selected.every(
+    (ele) => question.question.answer.indexOf(ele) != -1
+  );
+  if (!seikai) {
+    sign = false;
+  }
+  if (sign) {
+    //right
+    right();
+  } else {
+    //wrong
+    wrong();
+  }
+};
+const clear = () => {
+  selected.length = 0;
+};
+const right = async () => {
+  boss.remain--;
+
+  //request
+  const res = await request({
+    url:'/student/rightWrong',
+    method:'POST',
+    data:{
+      type:question.question.type,
+      sign:'right'
+    }
+  })
+  console.log(res);
+
+  setTimeout(() => {
+    detection();
+  }, 1500);
+};
+const wrong = async () => {
+  self.remain--;
+
+  //request
+  const res = await request({
+    url:'/student/rightWrong',
+    method:'POST',
+    data:{
+      type:question.question.type,
+      sign:'wrong'
+    }
+  })
+  console.log(res);
+
+  setTimeout(() => {
+    detection();
+  }, 1500);
+};
+
+//process control
+const inRound = ref(false);
 watch(challengeOn, (newValue) => {
   if (newValue) {
     start();
@@ -55,11 +133,46 @@ const start = () => {
     boss.remain = 10 + rank.value * 5;
   }
 
-  round();
+  //开场动画
+  setTimeout(() => {
+    round();
+  }, 2000);
 };
 const round = () => {
+  inRound.value = true;
   getQuestion();
+  countStart();
 };
+const detection = () => {
+  clear();
+  if (boss.remain == 0) {
+    //pass
+    console.log("pass");
+  } else if (self.remain == 0) {
+    //die
+    console.log("die");
+  } else {
+    //new round
+    round();
+  }
+};
+
+//let count down
+const COUNTDOWN = 15;
+const countDown = ref(COUNTDOWN);
+let timer = undefined;
+const countStart = () => {
+  countDown.value = COUNTDOWN;
+  timer = setInterval(() => {
+    countDown.value--;
+  }, 1000);
+};
+watch(countDown, (newValue) => {
+  if (newValue == 0) {
+    //zero
+    commit();
+  }
+});
 
 const last = ref(-1);
 const getQuestion = () => {
@@ -78,6 +191,8 @@ onMounted(() => {
   });
 });
 onBeforeUnmount(() => {
+  clearInterval(timer);
+
   emitter.off("challenge");
 });
 </script>
@@ -86,8 +201,9 @@ onBeforeUnmount(() => {
   <div class="challenge" v-if="challengeOn">
     <!-- {{question.question}} -->
     <div class="remain">
-      <div class="boss"></div>
-      <div class="self"></div>
+      <div class="count-down">{{ inRound ? countDown : "" }}</div>
+      <div class="boss">{{ boss.remain }}</div>
+      <div class="self">{{ self.remain }}</div>
     </div>
     <div class="bamen">
       <div class="boss-bamen"></div>
@@ -95,13 +211,23 @@ onBeforeUnmount(() => {
     </div>
     <div class="bottom">
       <div class="question">
-        {{question.question.contnet}}
+        {{ question.question.contnet }}
       </div>
       <div class="answers">
-        <div class="answer" v-for="(selection,index) in question.question.selections" :key="index" @click="answer">
-        {{index}}
-          {{selection}}
+        <div
+          class="answer"
+          :class="{ selected: selected.indexOf(index) != -1 }"
+          v-for="(selection, index) in question.question.selections"
+          :key="index"
+          @click="answer(index)"
+        >
+          {{ index }}
+          {{ selection }}
         </div>
+      </div>
+      <div class="act">
+        <div class="commit" @click="commit">commit</div>
+        <div class="clear" @click="clear">取消</div>
       </div>
     </div>
   </div>
@@ -127,9 +253,18 @@ onBeforeUnmount(() => {
     flex-direction: row;
   }
   .remain {
+    position: relative;
     flex: 11;
     background-color: rgba(240, 248, 255, 0.724);
     justify-content: space-between;
+    .count-down {
+      position: absolute;
+      height: 150%;
+      width: 10%;
+      left: 0;
+      right: 0;
+      margin: 0 auto;
+    }
     & > div {
       height: 100%;
       width: 40%;
@@ -153,22 +288,22 @@ onBeforeUnmount(() => {
   .bottom {
     flex: 29;
     background-color: rgba(225, 254, 245, 0.596);
-    &>div{
+    & > div {
       height: 100%;
     }
-    .question{
+    .question {
       flex: 26;
       background-color: rgba(229, 255, 203, 0.672);
     }
-    .answers{
+    .answers {
       position: relative;
       flex: 74;
-      background-color:rgba(175, 255, 228, 0.672);
+      background-color: rgba(175, 255, 228, 0.672);
       display: flex;
       flex-wrap: wrap;
       justify-content: flex-start;
       align-items: flex-start;
-      .answer{
+      .answer {
         height: 42%;
         width: 44%;
         background-color: rgba(255, 248, 220, 0.604);
@@ -176,9 +311,26 @@ onBeforeUnmount(() => {
         margin-top: 1%;
         margin-left: 3%;
         cursor: pointer;
-        &:nth-of-type(2n){
+        &:nth-of-type(2n) {
           margin-left: 6%;
         }
+      }
+      .selected {
+        background-color: rgba(247, 224, 195, 0.737);
+      }
+    }
+    .act {
+      flex: 15;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-around;
+      align-items: center;
+      & > div {
+        background-color: antiquewhite;
+        height: 30%;
+        width: 80%;
+        border-radius: 20px;
+        cursor: pointer;
       }
     }
   }

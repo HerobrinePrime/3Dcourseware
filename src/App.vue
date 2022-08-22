@@ -4,9 +4,7 @@ import { Transition } from "vue";
 
 
 <template>
-
   <router-view></router-view>
-
 </template>
 
 <style>
@@ -30,4 +28,11 @@ html {
 .fade-leave-from {
   transform: translate(0);
 }
+.wrapper:hover .load-box{
+  transform: scale(1.2);
+}
+.load-box {
+  transition: transform 0.8s ease;
+}
+
 </style>
