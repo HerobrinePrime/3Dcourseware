@@ -665,6 +665,13 @@ onBeforeUnmount(() => {
   >
     challengeOn
   </button>
+  <button
+    class="test"
+    @click="router.push({name:'Room'})"
+    style="position: absolute; right: 0; top: 210px; color: #fff;z-index: 201;"
+  >
+    toRoom
+  </button>
   <!-- <button
     class="test"
     @click="getMessage"

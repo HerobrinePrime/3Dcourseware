@@ -20,11 +20,15 @@ declare module '@vue/runtime-core' {
     Maze: typeof import('./src/components/Maze.vue')['default']
     News: typeof import('./src/components/main/news.vue')['default']
     Phone: typeof import('./src/components/main/phone.vue')['default']
+    Room: typeof import('./src/components/spaces/room.vue')['default']
     RouterLink: typeof import('vue-router')['RouterLink']
     RouterView: typeof import('vue-router')['RouterView']
     Screen: typeof import('./src/components/Screen.vue')['default']
     SelectPanel: typeof import('./src/components/SelectPanel.vue')['default']
     Setumei: typeof import('./src/components/Setumei.vue')['default']
     States: typeof import('./src/components/main/states.vue')['default']
+  }
+  export interface ComponentCustomProperties {
+    vLoading: typeof import('element-plus/es')['ElLoadingDirective']
   }
 }

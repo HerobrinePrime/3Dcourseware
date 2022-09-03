@@ -121,6 +121,9 @@ watch(challengeOn, (newValue) => {
   if (newValue) {
     start();
   }
+  else{
+    clearInterval(timer);
+  }
 });
 const start = () => {
   if (model.value == 0) {
@@ -191,6 +194,7 @@ onMounted(() => {
   });
 });
 onBeforeUnmount(() => {
+  console.log("onBeforeUnmount");
   clearInterval(timer);
 
   emitter.off("challenge");
@@ -209,7 +213,7 @@ onBeforeUnmount(() => {
       <div class="boss-bamen"></div>
       <div class="self-bamen"></div>
     </div>
-    <div class="bottom">
+    <div class="bottom" v-loading="!inRound">
       <div class="question">
         {{ question.question.contnet }}
       </div>
@@ -247,6 +251,7 @@ onBeforeUnmount(() => {
   right: 0;
   display: flex;
   flex-direction: column;
+  background-image: url(/UI/challenge/);
   & > div {
     width: 100%;
     display: flex;

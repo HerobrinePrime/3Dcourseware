@@ -4,7 +4,12 @@ import { Transition } from "vue";
 
 
 <template>
-  <router-view></router-view>
+  <router-view v-slot="{ Component }">
+    <keep-alive include="Load2">
+      <component :is="Component" v-if="$route.meta.keepAlive"/>
+    </keep-alive>
+    <component :is="Component" v-if="!$route.meta.keepAlive"/>
+  </router-view>
 </template>
 
 <style>
@@ -28,11 +33,10 @@ html {
 .fade-leave-from {
   transform: translate(0);
 }
-.wrapper:hover .load-box{
+.wrapper:hover .load-box {
   transform: scale(1.2);
 }
 .load-box {
   transition: transform 0.8s ease;
 }
-
 </style>

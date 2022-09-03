@@ -276,6 +276,7 @@ export default createStore({
                 method:'POST',
                 url:'/student/getAllQuestions',
             })
+            console.log(res.data);
             if(res.data.code == 200){
                 commit('QUESTIONS',res.data.data)
             }

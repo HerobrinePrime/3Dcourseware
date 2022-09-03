@@ -1,4 +1,4 @@
-<script setup>
+<script setup name="Load2">
 import { computed, ref, watch, onMounted, toRaw } from "@vue/runtime-core";
 import { useRouter } from "vue-router";
 import { useStore } from "vuex";
