@@ -263,6 +263,7 @@ onBeforeUnmount(() => {
   bottom: 70px;
   left: 0px;
   cursor: pointer;
+  font-family: 'xknlt';
   &::after {
     // content: " ";
     // position: absolute;
@@ -289,6 +290,7 @@ onBeforeUnmount(() => {
     border-left-color: transparent;
     border-top-color: transparent;
     // box-shadow: 8px 8px 20px 1px #fff;
+    font-family: 'xknlt';
   }
 
   .treasure {
@@ -311,8 +313,8 @@ onBeforeUnmount(() => {
 .ichizon {
   position: absolute;
   z-index: 100;
-  height: 200px;
-  width: 400px;
+  height: 170px;
+  width: 380px;
   bottom: 0;
   margin-left: 50%;
   transform: translate(0, -50px);
@@ -322,13 +324,14 @@ onBeforeUnmount(() => {
 
   .inter {
     height: 100%;
-    width: 400px;
+    width: 100%;
     display: flex;
     justify-content: space-around;
     align-items: center;
     background-color: rgb(255, 253, 255);
     border-radius: 20px;
     border: 5px solid #766baa;
+    font-family: 'xknlt';
     div {
       height: 30px;
       width: 80px;

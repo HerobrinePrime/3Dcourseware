@@ -134,6 +134,41 @@ store.dispatch("testToken", localStorage.getItem("token")).then(({ code }) => {
   }
 });
 
+//challenge triggers
+// #region
+const challenge1 = ref()
+const challenge2 = ref()
+const challenge3 = ref()
+
+//challenge count
+const challengeCount = ref(0)
+const passCount = ref(0)
+watch(challengeCount,(newValue)=>{
+  console.log(newValue);
+  if(newValue == 3){
+    //通关
+    console.log(passCount);
+    if(passCount == 3){
+      
+    }
+    
+  }
+})
+
+//challenge trigger enter
+const getChallenge = (num)=>{
+  if(num == 1) challenge1.value.onEnter = undefined
+  if(num == 2) challenge2.value.onEnter = undefined
+  if(num == 3) challenge3.value.onEnter = undefined
+
+  // warning
+
+  setTimeout(()=>{
+    emitter.emit('challenge')
+  },1200)
+}
+// #endregion
+
 //msg triggers
 const msg1 = ref()
 const msg2 = ref()
@@ -177,6 +212,7 @@ const clearTimes = () => {
   });
   times.clear();
 };
+
 
 //svg arrow rotate
 const svgRotate = useAnimation({
@@ -307,6 +343,14 @@ onMounted(() => {
     phoneOn.value = false
   })
 
+  //challenge
+  emitter.on("challengeDone",(pass)=>{
+      challengeCount.value ++
+
+      if(true){
+        passCount ++
+      }
+  })
 });
 onBeforeUnmount(() => {
   emitter.off("thebook");
@@ -320,6 +364,8 @@ onBeforeUnmount(() => {
 
   emitter.off("failure")
   emitter.off("success ")
+
+  emitter.off("challengeDone")
 });
 </script>
 
@@ -581,6 +627,41 @@ onBeforeUnmount(() => {
       targetIds="character"
       :radius="240"
       @enter="getMessage(4)"
+    />
+
+    <!-- challenge triggers -->
+
+    <Trigger 
+      ref="challenge1"
+      pad
+      :x="-2594.53"
+      :y="40"
+      :z="2721.25"
+      targetIds="character"
+      :radius="240"
+      @enter="getChallenge(1)"
+    />
+
+    <Trigger 
+      ref="challenge2"
+      pad
+      :x="-932.61"
+      :y="40"
+      :z="402.38"
+      targetIds="character"
+      :radius="240"
+      @enter="getChallenge(2)"
+    />
+
+    <Trigger 
+      ref="challenge3"
+      pad
+      :x="3302.38"
+      :y="40"
+      :z="3686.00"
+      targetIds="character"
+      :radius="240"
+      @enter="getChallenge(3)"
     />
 
     <AmbientLight />

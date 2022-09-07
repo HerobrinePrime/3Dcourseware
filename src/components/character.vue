@@ -199,6 +199,7 @@ onBeforeUnmount(() => {
   bottom: 70px;
   left: 0px;
   cursor: pointer;
+  font-family: 'xknlt';
   &::after {
     // content: " ";
     // position: absolute;
@@ -301,13 +302,14 @@ onBeforeUnmount(() => {
 
   .inter {
     height: 100%;
-    width: 400px;
+    width: 100%;
     display: flex;
     justify-content: space-around;
     align-items: center;
     background-color: rgb(255, 253, 255);
     border-radius: 20px;
     border: 5px solid #766baa;
+    font-family: 'xknlt';
     div {
       height: 30px;
       width: 80px;

@@ -3,13 +3,17 @@ import { Transition } from "vue";
 </script>
 
 
-<template>
+<!-- <template>
   <router-view v-slot="{ Component }">
     <keep-alive include="Load2">
       <component :is="Component" v-if="$route.meta.keepAlive"/>
     </keep-alive>
     <component :is="Component" v-if="!$route.meta.keepAlive"/>
   </router-view>
+</template> -->
+
+<template>
+  <router-view></router-view>
 </template>
 
 <style>
