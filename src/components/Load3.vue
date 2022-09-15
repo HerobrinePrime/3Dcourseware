@@ -4,7 +4,7 @@
     import { useStore } from "vuex";
     import { usePreload } from "lingo3d-vue";
     import { Transition } from "@vue/runtime-dom";
-    import Maze from "./Maze.vue";
+    import Mid from "./Mid.vue";
     import emitter from "../eventBus";
     
     const { dispatch } = useStore();
@@ -66,7 +66,7 @@
           </div>
         </div>
       </Transition>
-      <div class="wrapper" :class="{ show: started }"><Maze /></div>
+      <div class="wrapper" :class="{ show: started }"><Mid /></div>
     
       <div class="load-font" style="font-family: 'hwhp'">asdf</div>
       <div class="load-font" style="font-family: 'xknlt'">asdf</div>

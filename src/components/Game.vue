@@ -118,7 +118,7 @@ console.log(Trigger);
 const router = useRouter();
 const toMaze = () => {
   router.replace({
-    name: "maze",
+    name: "episode",
   });
 };
 
