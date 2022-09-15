@@ -16,12 +16,22 @@
     :onMouseOut="shut"
     :onClick="interact"
   >
+    <!-- <HTML>
+      <div class="hint" v-show="!saying">
+        <img src="/UI/hints/hito_hint.png">
+      </div>
+    </HTML> -->
     <HTML>
       <div class="hanashi" v-show="saying">
         {{ state.hanashi[hanashi][count].kotoba }}
         <Transition name="treasure">
-          <div class="treasure" v-if="state.hanashi[hanashi][count].key && !done">
-            <img :src="`/UI/defence/treasure${state.hanashi[hanashi][count].key}.png`">
+          <div
+            class="treasure"
+            v-if="state.hanashi[hanashi][count].key && !done"
+          >
+            <img
+              :src="`/UI/defence/treasure${state.hanashi[hanashi][count].key}.png`"
+            />
           </div>
         </Transition>
       </div>
@@ -30,8 +40,8 @@
   <Transition name="i">
     <div class="ichizon" v-show="interacting">
       <div class="inter">
-        <div class="continue" @click="tuzuki">continue</div>
-        <div class="end" @click="end">end</div>
+        <div class="continue" @click="tuzuki">继续对话</div>
+        <div class="end" @click="end">结束对话</div>
       </div>
     </div>
   </Transition>
@@ -39,7 +49,7 @@
 
 <script setup>
 import { useStore } from "vuex";
-import { HTML, Model } from "lingo3d-vue";
+import { HTML, Model, Sprite } from "lingo3d-vue";
 import emitter from "../eventBus";
 import { onBeforeUnmount, onMounted, ref, watch } from "@vue/runtime-core";
 import { Transition } from "@vue/runtime-dom";
@@ -53,16 +63,18 @@ const { hanashi, theThirdKey, theForthKey } = defineProps([
   "theThirdKey",
   "theForthKey",
 ]);
-const { state, commit } = useStore();
+const { state, commit,dispatch } = useStore();
 
 const count = ref(0);
 const done = ref(false);
 watch(done, (newVlaue) => {
+  commit("npcs")
+  dispatch("setProcess",4 + state.datas.npcs)
   console.log(newVlaue);
   console.log("theThirdKey:", theThirdKey);
   console.log("theForthKey:", theForthKey);
-  if(theThirdKey) emitter.emit('gettreasure',3)
-  if(theForthKey) emitter.emit('gettreasure',4)
+  if (theThirdKey) emitter.emit("gettreasure", 3);
+  if (theForthKey) emitter.emit("gettreasure", 4);
 });
 
 const char = ref();
@@ -70,6 +82,7 @@ const saying = ref(false);
 const interacting = ref(false);
 const say = () => {
   // console.log("say");
+  return
   saying.value = true;
 };
 const shut = () => {
@@ -132,6 +145,7 @@ const tuzuki = () => {
 };
 const end = () => {
   disinteract();
+  
 };
 
 //事件总线
@@ -199,7 +213,7 @@ onBeforeUnmount(() => {
   bottom: 70px;
   left: 0px;
   cursor: pointer;
-  font-family: 'xknlt';
+  font-family: "xknlt";
   &::after {
     // content: " ";
     // position: absolute;
@@ -271,7 +285,7 @@ onBeforeUnmount(() => {
   //   border-right-color: transparent;
   //   border-bottom: none;
   // }
-  .treasure{
+  .treasure {
     transition: opacity 0.5s ease;
     position: absolute;
     height: 50px;
@@ -281,7 +295,7 @@ onBeforeUnmount(() => {
     bottom: 0;
     top: 0;
     margin: auto 0;
-    img{
+    img {
       height: 100%;
       width: 100%;
     }
@@ -291,15 +305,14 @@ onBeforeUnmount(() => {
 .ichizon {
   position: absolute;
   z-index: 100;
-  height: 200px;
+  height: 133px;
   width: 400px;
-  bottom: 0;
+  bottom: 0px;
   margin-left: 50%;
   transform: translate(0, -50px);
   background-color: #fff;
   border-radius: 20px;
   transition: opacity 0.7s ease 0.3s;
-
   .inter {
     height: 100%;
     width: 100%;
@@ -309,10 +322,10 @@ onBeforeUnmount(() => {
     background-color: rgb(255, 253, 255);
     border-radius: 20px;
     border: 5px solid #766baa;
-    font-family: 'xknlt';
+    font-family: "xknlt";
     div {
       height: 30px;
-      width: 80px;
+      width: 130px;
       text-align: center;
       line-height: 30px;
       color: #000;
@@ -325,7 +338,7 @@ onBeforeUnmount(() => {
       width: 50px;
       position: absolute;
       background-color: #fff;
-      bottom: 75px;
+      bottom: 41px;
       left: -20px;
       // transform-origin: 50% 50%;
       transform: rotate(45deg);
@@ -351,5 +364,14 @@ onBeforeUnmount(() => {
 .treasure-enter-to,
 .treasure-leave-from {
   opacity: 1;
+}
+
+.hint {
+  height: 50px;
+  position: relative;
+  left: -20px;
+  top: -90px;
+  img {
+  }
 }
 </style>

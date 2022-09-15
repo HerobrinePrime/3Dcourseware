@@ -123,6 +123,12 @@ const changeView2 = () => {
     orbitCamera.minPolarAngle = 90
     orbitCamera.maxPolarAngle = 105
 }
+const changeView3 = () => {
+    console.log('changeView');
+    
+    orbitCamera.innerY = 600
+    orbitCamera.innerX = 180
+}
 const resetView = () => {
     console.log('resetView');
     
@@ -154,6 +160,7 @@ export {
     orbitCameraInstance,
     changeView,
     changeView2,
+    changeView3,
     resetView,
 
     camera_springInnerX,

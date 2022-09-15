@@ -31,12 +31,12 @@ import {
   ref,
   registerRuntimeCompiler,
   toRaw,
+  Transition,
   watch,
   watchEffect,
 } from "vue";
 import { useStore } from "vuex";
 import { useRoute, useRouter } from "vue-router";
-
 //hooks
 import { editorOn } from "../hooks/mazeHooks/basicController.js";
 // import { savePoint } from "../hooks/mazeHooks/savePoint.js";
@@ -45,6 +45,7 @@ import {
   orbitCameraInstance,
   changeView,
   changeView2,
+  changeView3,
   resetView,
   camera_springInnerX,
   camera_springInnerY,
@@ -68,33 +69,70 @@ import Phone from "./main/phone.vue";
 import Character from "./character.vue";
 import Characters from "./characters.vue";
 import Challenge from "./challenge/challenge.vue";
+import Screen from "./Screen.vue";
+import Report from "./Report.vue";
+
+import { ElMessage } from "element-plus";
+
+import { throttle } from "lodash";
+
+//endingControl
+const endScreen = [
+  "/UI/screen/end/0.png",
+  "/UI/screen/end/1.png",
+  "/UI/screen/end/2.png",
+];
+const screenOn = ref(false);
+
+//startControll
+const startScreen = [
+  "/UI/screen/start/0.png",
+  "/UI/screen/start/1.png",
+  "/UI/screen/start/2.png",
+  "/UI/screen/start/3.png",
+  "/UI/screen/start/4.png",
+  "/UI/screen/start/5.png",
+];
+const startScreenOn = ref(false);
+const screenOnInStatus = () => {
+  startScreenOn.value = true;
+};
 
 const store = useStore();
 const router = useRouter();
 
 //fov control
-window.onmousewheel = (e)=>{
-  if(e.wheelDelta > 0){
-    if(orbitCamera.fov <= 40) return
-    orbitCamera.fov -= 2
+window.onmousewheel = (e) => {
+  if (wheelBan) return;
+
+  if (e.wheelDelta > 0) {
+    if (orbitCamera.fov <= 40) return;
+    orbitCamera.fov -= 2;
+  } else {
+    if (orbitCamera.fov >= 100) return;
+    orbitCamera.fov += 2;
   }
-  else{
-    if(orbitCamera.fov >= 100) return
-    orbitCamera.fov += 2
-  }
-}
+};
 
 //treasure
 // #region
 //y anime
 const yAnime = useAnimation({
   from: 120,
-  to: 160,
+  to: 140,
+  repeat: Infinity,
+  repeatType: "reverse",
+  duration: 1300,
+});
+const charYAnime = useAnimation({
+  from: 220,
+  to: 260,
   repeat: Infinity,
   repeatType: "reverse",
   duration: 1500,
 });
 const treasureEnter = (num) => {
+  // store.dispatch("setProcess");
   if (num == 1) disappear(treasure1, num);
   else disappear(treasure2, num);
 };
@@ -112,6 +150,9 @@ const disappear = (target, num) => {
 };
 //決定事項
 const getTreasure = (num) => {
+  ElMessage.success("获得锦囊");
+  store.commit("treasures");
+  store.dispatch("setProcess", 19 + store.state.datas.treasures);
   //收集回调
   console.log("got", num);
   setTimeout(() => {
@@ -136,44 +177,65 @@ store.dispatch("testToken", localStorage.getItem("token")).then(({ code }) => {
 
 //challenge triggers
 // #region
-const challenge1 = ref()
-const challenge2 = ref()
-const challenge3 = ref()
+const challenge1 = ref();
+const challenge2 = ref();
+const challenge3 = ref();
+
+const dog1 = ref();
+const dog2 = ref();
+const dog3 = ref();
 
 //challenge count
-const challengeCount = ref(0)
-const passCount = ref(0)
-watch(challengeCount,(newValue)=>{
-  console.log(newValue);
-  if(newValue == 3){
-    //通关
-    console.log(passCount);
-    if(passCount == 3){
-      
-    }
-    
+const challengeCount = ref(0);
+// const useChallengeCount = ref(0);
+watch(challengeCount, (newValue) => {
+  store.dispatch("setProcess", 12 + challengeCount.value);
+  if (newValue == 3) {
+    challengeDone.value = true;
   }
-})
+});
 
+const warningOn = ref(false);
 //challenge trigger enter
-const getChallenge = (num)=>{
-  if(num == 1) challenge1.value.onEnter = undefined
-  if(num == 2) challenge2.value.onEnter = undefined
-  if(num == 3) challenge3.value.onEnter = undefined
+const getChallenge = (num) => {
+  interacting.value = true;
+
+  //stop
+  const hito = person.value;
+  // hito.lookTo(e.point.x, undefined, e.point.z, 0.15);
+  hito.moveTo(hito.x, undefined, hito.z, 100);
 
   // warning
+  warningOn.value = true;
 
-  setTimeout(()=>{
-    emitter.emit('challenge')
-  },1200)
-}
+  setTimeout(() => {
+    warningOn.value = false;
+    emitter.emit("challenge");
+  }, 3000);
+  setTimeout(() => {
+    interacting.value = false;
+  }, 3100);
+};
 // #endregion
 
 //msg triggers
-const msg1 = ref()
-const msg2 = ref()
-const msg3 = ref()
-const msg4 = ref()
+const messageCount = ref(0);
+watch(messageCount, (num) => {
+  store.dispatch("setProcess", 15 + messageCount.value);
+  if (num == 4) {
+    messageDone.value = true;
+  }
+});
+
+const msg1 = ref();
+const msg2 = ref();
+const msg3 = ref();
+const msg4 = ref();
+
+const messageSprite1 = ref();
+const messageSprite2 = ref();
+const messageSprite3 = ref();
+const messageSprite4 = ref();
 
 //控件
 const mapOn = ref(true);
@@ -182,28 +244,52 @@ const getKey = (key) => {
 };
 const times = reactive(new Set());
 const getMessage = (num) => {
-  if(num == 1) msg1.value.onEnter = undefined
-  if(num == 2) msg2.value.onEnter = undefined
-  if(num == 3) msg3.value.onEnter = undefined
-  if(num == 4) msg4.value.onEnter = undefined
+  let sprite = {};
+  if (num == 1) {
+    sprite = messageSprite1.value;
+    msg1.value.onEnter = undefined;
+  }
+  if (num == 2) {
+    sprite = messageSprite2.value;
+    msg2.value.onEnter = undefined;
+  }
+  if (num == 3) {
+    sprite = messageSprite3.value;
+    msg3.value.onEnter = undefined;
+  }
+  if (num == 4) {
+    sprite = messageSprite4.value;
+    msg4.value.onEnter = undefined;
+  }
+  sprite.onLoop = () => {
+    sprite.opacity -= 0.03;
+    if (sprite.opacity <= 0) sprite.onLoop = undefined;
+  };
+
   //清除times
   clearTimes();
 
   //手机收到消息 一共调用4次
   emitter.emit("getmessage");
-  bagChange(false);
-  let t1 = setTimeout(() => {
-    emitter.emit("shake");
-  }, 700); //等待背包打开
-  let t2 = setTimeout(() => {
-    emitter.emit("shake");
-    console.log("t2");
-  }, 2000); //等待一次shake 800
-  let t3 = setTimeout(() => [bagChange(true)], 3000);
 
-  times.add(t1);
-  times.add(t2);
-  times.add(t3);
+  emitter.emit("awaOff", false);
+
+  // //打开背包
+  // bagChange(false);
+  // //1shake
+  // let t1 = setTimeout(() => {
+  //   emitter.emit("shake");
+  // }, 700); //等待背包打开
+  // //2shake
+  // let t2 = setTimeout(() => {
+  //   emitter.emit("shake");
+  //   console.log("t2");
+  // }, 2000); //等待一次shake 800
+  // //关闭背包
+  // let t3 = setTimeout(() => bagChange(true), 3000);
+  // times.add(t1);
+  // times.add(t2);
+  // times.add(t3);
 };
 const clearTimes = () => {
   times.forEach((t) => {
@@ -212,7 +298,6 @@ const clearTimes = () => {
   });
   times.clear();
 };
-
 
 //svg arrow rotate
 const svgRotate = useAnimation({
@@ -288,10 +373,72 @@ const theTrigger = () => {
 };
 //#endregion
 
+const dream = ref(false);
+
+//end controll
+const challengeDone = ref(false);
+const messageDone = ref(false);
+watchEffect(() => {
+  console.log("challengeDone", challengeDone.value);
+  console.log("messageDone", messageDone.value);
+  if (challengeDone.value && messageDone.value) {
+    console.log("pass");
+    setTimeout(() => {
+      screenOn.value = true;
+    }, 1000);
+  }
+});
+
+//propaganda
+// #region
+const onPanel = ref(0);
+let last = 75;
+let wheelBan = false;
+let zoomIning = false;
+const mouseEnterPanel = (num) => {
+  if (wheelBan) return;
+  wheelBan = true;
+  setTimeout(() => {
+    zoomIning = true;
+  }, 0);
+  // console.log(num);
+  onPanel.value = num;
+  // changeView2()
+  // changeView()
+  changeView3();
+  last = orbitCamera.fov;
+  orbitCamera.fov = 30;
+};
+const mouseLeavePanel = () => {
+  wheelBan = false;
+  setTimeout(() => {
+    zoomIning = false;
+  });
+
+  onPanel.value = 0;
+  resetView();
+  orbitCamera.fov = last;
+};
+const oooo = (event) => {
+  if (zoomIning) {
+    mouseLeavePanel();
+  } else {
+    return;
+  }
+  // mouseLeavePanel()
+};
+// #endregion
+
 //bus
 onMounted(() => {
   //视角问题
   resetView();
+
+  emitter.on("mazeStart", () => {
+    setTimeout(() => {
+      startScreenOn.value = true;
+    }, 1500);
+  });
 
   emitter.on("thebook", () => {
     bagChange(true);
@@ -334,25 +481,90 @@ onMounted(() => {
   });
 
   //failure teleport to save point
-  emitter.on("failure",()=>{
-    phoneOn.value = false
-    theTrigger()
-  })
+  emitter.on("failure", () => {
+    messageCount.value++;
+    phoneOn.value = false;
+    theTrigger();
+    ElMessage.warning("防范失败");
+  });
   //success
-  emitter.on("success",()=>{
-    phoneOn.value = false
-  })
+  emitter.on("success", () => {
+    messageCount.value++;
+    phoneOn.value = false;
+    ElMessage.success("防范成功");
+  });
 
   //challenge
-  emitter.on("challengeDone",(pass)=>{
-      challengeCount.value ++
+  emitter.on("challengeDone", (pass) => {
+    store.commit("challenges");
 
-      if(true){
-        passCount ++
+    if (pass) {
+      ElMessage.success("挑战成功");
+      challengeCount.value++;
+      //移除狗
+      //清除狗回调
+      let dog = {};
+      if (challengeCount.value == 1) {
+        challenge1.value.onEnter = undefined;
+        dog = dog1.value;
       }
-  })
+      if (challengeCount.value == 2) {
+        challenge2.value.onEnter = undefined;
+        dog = dog2.value;
+      }
+      if (challengeCount.value == 3) {
+        challenge3.value.onEnter = undefined;
+        dog = dog3.value;
+      }
+      dog.outline = false;
+      dog.opacityFactor = 0;
+    } else {
+      //回到保存点
+      theTrigger();
+      ElMessage.warning("挑战失败");
+    }
+  });
+
+  emitter.on("screenOff", (end) => {
+    if (end) {
+      screenOn.value = false;
+      setTimeout(() => {
+        //梦醒
+        dream.value = true;
+      }, 1000);
+      return;
+    }
+
+    startScreenOn.value = false;
+    setTimeout(() => {
+      active.value = false;
+    }, 1200);
+    // setTimeout(() => {
+    //   router.replace({name:'main'})
+    // }, 1000);
+  });
+
+  emitter.on("awa-bag", () => {
+    //打开背包
+    bagChange(false);
+    //1shake
+    let t1 = setTimeout(() => {
+      emitter.emit("shake");
+    }, 700); //等待背包打开
+    //2shake
+    let t2 = setTimeout(() => {
+      emitter.emit("shake");
+      console.log("t2");
+    }, 2000); //等待一次shake 800
+    //关闭背包
+    let t3 = setTimeout(() => bagChange(true), 3000);
+    times.add(t1);
+    times.add(t2);
+    times.add(t3);
+  });
 });
 onBeforeUnmount(() => {
+  emitter.off("mazeStart");
   emitter.off("thebook");
   emitter.off("thephone");
 
@@ -362,10 +574,14 @@ onBeforeUnmount(() => {
 
   emitter.off("gettreasure");
 
-  emitter.off("failure")
-  emitter.off("success ")
+  emitter.off("failure");
+  emitter.off("success ");
 
-  emitter.off("challengeDone")
+  emitter.off("challengeDone");
+
+  emitter.off("screenOff");
+
+  emitter.off("awa-bag");
 });
 </script>
 
@@ -374,14 +590,24 @@ onBeforeUnmount(() => {
     :logarithmicDepth="false"
     :ambientOcclusion="false"
     default-orbit-controls="false"
+    @click="oooo"
   >
+    <!-- <Reflector
+      :scale-x="1000"
+      :scale-y="1000"
+      :rotation-x="-90"
+      :contrast="1"
+      :resolution="256"
+      :blur="1024"
+      :mirror="1.2"
+    /> -->
     <Reflector
       :scale-x="1000"
       :scale-y="1000"
       :rotation-x="-90"
       :contrast="1"
-      :resolution="512"
-      :blur="3072"
+      :resolution="256"
+      :blur="1842.0"
       :mirror="1"
     />
     <Trigger
@@ -415,7 +641,6 @@ onBeforeUnmount(() => {
     >
       <!-- :autoRotate="orbitCamera.autoRotate && !running" -->
       <Model
-        outline
         ref="person"
         :onLoop="pos"
         name="character"
@@ -444,10 +669,79 @@ onBeforeUnmount(() => {
       src="/models/maze.glb"
       physics="map"
     >
-      <Find name="road"  @click="mapOnClick"/>
+      <Find name="road" @click="mapOnClick" />
+
+      <!-- find panel for propaganda-->
+      <Find name="panel2" outline @click="mouseEnterPanel(2)">
+        <HTML>
+          <div
+            class="propaganda"
+            v-if="onPanel == 2"
+            style="
+              transform: translateX(120px) translateY(-140px);
+              -webkit-transform: translateX(120px) translateY(-140px);
+              -ms-transform: translateX(120px) translateY(-140px);
+              -moz-transform: translateX(120px) translateY(-140px);
+            "
+          >
+            游戏里说有免费的皮肤可以领取,随后让你先扫码、再解冻的,统统都是骗局!
+          </div>
+        </HTML>
+      </Find>
+      <Find name="panel3" outline @click="mouseEnterPanel(3)">
+        <HTML>
+          <div
+            class="propaganda"
+            v-if="onPanel == 3"
+            style="
+              transform: translateX(120px) translateY(-100px);
+              -ms-transform: translateX(120px) translateY(-100px);
+              -moz-transform: translateX(120px) translateY(-100px);
+              -webkit-transform: translateX(120px) translateY(-100px);
+            "
+          >
+            警惕网络陌生人,不贪小便宜,不点来历不明的链接
+          </div>
+        </HTML>
+      </Find>
+
+      <Find name="panel4" outline @click="mouseEnterPanel(4)">
+        <HTML>
+          <div
+            class="propaganda"
+            v-if="onPanel == 4"
+            style="
+              transform: translateX(120px) translateY(-100px);
+              -ms-transform: translateX(120px) translateY(-100px);
+              -moz-transform: translateX(120px) translateY(-100px);
+              -webkit-transform: translateX(120px) translateY(-100px);
+            "
+          >
+            切记千万不要盲目追星,反而给了骗子可趁之机！
+          </div>
+        </HTML>
+      </Find>
+
+      <Find name="panel5" outline @click="mouseEnterPanel(5)">
+        <HTML>
+          <div
+            class="propaganda"
+            v-if="onPanel == 5"
+            style="
+              transform: translateX(120px) translateY(-170px);
+              -ms-transform: translateX(120px) translateY(-170px);
+              -moz-transform: translateX(120px) translateY(-170px);
+              -webkit-transform: translateX(120px) translateY(-170px);
+            "
+          >
+            不要轻信社交媒体上与钱财交易有关的信息,第一时间核实亲友身份,避免轻易转账。
+          </div>
+        </HTML>
+      </Find>
     </Model>
 
     <!-- treasure -->
+    <!-- #region -->
     <!-- 1 -->
     <Sprite
       ref="treasure1"
@@ -476,7 +770,7 @@ onBeforeUnmount(() => {
       ref="treasure2"
       :x="-127.66"
       :y="yAnime"
-      :z="-119.60"
+      :z="-119.6"
       :width="60"
       :height="60"
       texture="/UI/defence/treasure2.png"
@@ -489,21 +783,45 @@ onBeforeUnmount(() => {
       pad
       :x="-127.66"
       :y="20"
-      :z="-119.60"
+      :z="-119.6"
       :radius="120"
       targetIds="character"
       @enter="treasureEnter(2)"
     />
+    <!-- #endregion -->
 
     <!-- hanashi -->
+    <!-- #region -->
+    <Sprite
+      v-if="true"
+      bloom
+      :opacity-factor="1.1"
+      adjust-emissive-color="#000000"
+      adjust-color="#ffffff"
+      :x="2218.85"
+      :z="3518.51"
+      :y="charYAnime"
+      texture="/UI/hints/person_hint.png"
+    />
     <Character
       :x="2218.85"
       :z="3518.51"
-      :rotationY="-54.00"
+      :rotationY="-54.0"
       :hanashi="2"
       src="pig-with-sunglass.fbx"
     />
 
+    <Sprite
+      v-if="true"
+      bloom
+      :opacity-factor="1.1"
+      adjust-emissive-color="#000000"
+      adjust-color="#ffffff"
+      :y="charYAnime"
+      :x="1932.59"
+      :z="1130.64"
+      texture="/UI/hints/person_hint.png"
+    />
     <Character
       :x="1932.59"
       :z="1130.64"
@@ -512,6 +830,17 @@ onBeforeUnmount(() => {
       src="rabbit-with-sunglass.glb"
     />
 
+    <Sprite
+      v-if="true"
+      bloom
+      :opacity-factor="1.1"
+      adjust-emissive-color="#000000"
+      adjust-color="#ffffff"
+      :y="charYAnime"
+      :x="-3406.15"
+      :z="-3241.15"
+      texture="/UI/hints/person_hint.png"
+    />
     <Character
       :x="-3406.15"
       :z="-3241.15"
@@ -521,10 +850,21 @@ onBeforeUnmount(() => {
     />
 
     <!-- kaiwa --><!-- theForthKey --><!-- theThirdKey -->
+    <Sprite
+      v-if="true"
+      bloom
+      :opacity-factor="1.1"
+      adjust-emissive-color="#000000"
+      adjust-color="#ffffff"
+      :y="charYAnime"
+      :x="-1345.66"
+      :z="-518.94"
+      texture="/UI/hints/person_hint.png"
+    />
     <Characters
       :x1="-1371.83"
-      :z1="-145.50"
-      :rotationY1="183.20"
+      :z1="-145.5"
+      :rotationY1="183.2"
       src1="rabbit-with-wise-eyes.glb"
       :x2="-1345.66"
       :z2="-518.94"
@@ -534,6 +874,17 @@ onBeforeUnmount(() => {
       :theForthKey="true"
     />
 
+    <Sprite
+      v-if="true"
+      bloom
+      :opacity-factor="1.1"
+      adjust-emissive-color="#000000"
+      adjust-color="#ffffff"
+      :y="charYAnime"
+      :x="624.85"
+      :z="-1167.97"
+      texture="/UI/hints/person_hint.png"
+    />
     <Characters
       :x1="624.85"
       :z1="-1167.97"
@@ -546,8 +897,19 @@ onBeforeUnmount(() => {
       src2="dog-with-brown-fur.glb"
     />
 
+    <Sprite
+      v-if="true"
+      bloom
+      :opacity-factor="1.1"
+      adjust-emissive-color="#000000"
+      adjust-color="#ffffff"
+      :y="charYAnime"
+      :x="-3597.46"
+      :z="1147.27"
+      texture="/UI/hints/person_hint.png"
+    />
     <Characters
-      :x1="-3382.70"
+      :x1="-3382.7"
       :z1="1457.65"
       :rotationY1="-154.87"
       src1="pig-with-pink-skin.glb"
@@ -558,10 +920,21 @@ onBeforeUnmount(() => {
       src2="dog-with-black-tail.glb"
     />
 
+    <Sprite
+      v-if="true"
+      bloom
+      :opacity-factor="1.1"
+      adjust-emissive-color="#000000"
+      adjust-color="#ffffff"
+      :y="charYAnime"
+      :x="193.55"
+      :z="1778.36"
+      texture="/UI/hints/person_hint.png"
+    />
     <Characters
       :x1="180.76"
       :z1="2140.68"
-      :rotationY1="-175.00"
+      :rotationY1="-175.0"
       src1="rabbit-with-yellow-skin.glb"
       :x2="193.55"
       :z2="1778.36"
@@ -571,6 +944,17 @@ onBeforeUnmount(() => {
       :theThirdKey="true"
     />
 
+    <Sprite
+      v-if="true"
+      bloom
+      :opacity-factor="1.1"
+      adjust-emissive-color="#000000"
+      adjust-color="#ffffff"
+      :y="charYAnime"
+      :x="-2932.59"
+      :z="-940.67"
+      texture="/UI/hints/person_hint.png"
+    />
     <Characters
       :x1="-3219.04"
       :z1="-820.17"
@@ -582,10 +966,12 @@ onBeforeUnmount(() => {
       :kaiwa="4"
       src2="dog-with-brown-fur.glb"
     />
+    <!-- #endregion -->
 
     <!-- getMessage Trigger-->
+    <!-- #region -->
     <!-- function getMessage -->
-    <Trigger 
+    <Trigger
       ref="msg1"
       pad
       :x="-1729.04"
@@ -595,8 +981,21 @@ onBeforeUnmount(() => {
       :radius="240"
       @enter="getMessage(1)"
     />
+    <Sprite
+      ref="messageSprite1"
+      bloom
+      :opacity-factor="1.1"
+      adjust-emissive-color="#000000"
+      adjust-color="#ffffff"
+      :y="yAnime"
+      :x="-1729.04"
+      :z="-1531.72"
+      texture="/UI/hints/hito_hint.png"
+      :scale="0.5"
+      @click="mapOnClick"
+    />
 
-    <Trigger 
+    <Trigger
       ref="msg2"
       pad
       :x="-3909.75"
@@ -606,8 +1005,21 @@ onBeforeUnmount(() => {
       :radius="240"
       @enter="getMessage(2)"
     />
+    <Sprite
+      ref="messageSprite2"
+      bloom
+      :opacity-factor="1.1"
+      adjust-emissive-color="#000000"
+      adjust-color="#ffffff"
+      :y="yAnime"
+      :x="-3909.75"
+      :z="669.71"
+      texture="/UI/hints/hito_hint.png"
+      :scale="0.5"
+      @click="mapOnClick"
+    />
 
-    <Trigger 
+    <Trigger
       ref="msg3"
       pad
       :x="-932.05"
@@ -617,8 +1029,21 @@ onBeforeUnmount(() => {
       :radius="240"
       @enter="getMessage(3)"
     />
+    <Sprite
+      ref="messageSprite3"
+      bloom
+      :opacity-factor="1.1"
+      adjust-emissive-color="#000000"
+      adjust-color="#ffffff"
+      :y="yAnime"
+      :x="-932.05"
+      :z="-1531.06"
+      texture="/UI/hints/hito_hint.png"
+      :scale="0.5"
+      @click="mapOnClick"
+    />
 
-    <Trigger 
+    <Trigger
       ref="msg4"
       pad
       :x="1719.95"
@@ -628,10 +1053,24 @@ onBeforeUnmount(() => {
       :radius="240"
       @enter="getMessage(4)"
     />
+    <Sprite
+      ref="messageSprite4"
+      bloom
+      :opacity-factor="1.1"
+      adjust-emissive-color="#000000"
+      adjust-color="#ffffff"
+      :y="yAnime"
+      :x="1719.95"
+      :z="1610.11"
+      texture="/UI/hints/hito_hint.png"
+      :scale="0.5"
+      @click="mapOnClick"
+    />
+    <!-- #endregion -->
 
     <!-- challenge triggers -->
-
-    <Trigger 
+    <!-- #region -->
+    <Trigger
       ref="challenge1"
       pad
       :x="-2594.53"
@@ -641,28 +1080,71 @@ onBeforeUnmount(() => {
       :radius="240"
       @enter="getChallenge(1)"
     />
+    <Model
+      @click="mapOnClick"
+      outline
+      ref="dog1"
+      pbr
+      :x="-2322.18"
+      :y="100.38"
+      :z="2726.14"
+      :width="73.41"
+      :depth="84.57"
+      :scale="1.75"
+      :rotationY="-90.0"
+      src="/models/characters/black-dog.glb"
+    />
 
-    <Trigger 
+    <Trigger
       ref="challenge2"
       pad
-      :x="-932.61"
+      :x="-669.32"
       :y="40"
-      :z="402.38"
+      :z="506.86"
       targetIds="character"
       :radius="240"
       @enter="getChallenge(2)"
     />
+    <Model
+      @click="mapOnClick"
+      outline
+      ref="dog2"
+      pbr
+      :x="-903.83"
+      :y="100.38"
+      :z="404.06"
+      :width="73.41"
+      :depth="84.57"
+      :scale="1.75"
+      :rotationY="57.0"
+      src="/models/characters/black-dog.glb"
+    />
 
-    <Trigger 
+    <Trigger
       ref="challenge3"
       pad
-      :x="3302.38"
+      :x="3319.48"
       :y="40"
-      :z="3686.00"
+      :z="3603.91"
       targetIds="character"
       :radius="240"
       @enter="getChallenge(3)"
     />
+    <Model
+      @click="mapOnClick"
+      outline
+      ref="dog3"
+      pbr
+      :x="3319.48"
+      :y="100.38"
+      :z="3753.28"
+      :width="73.41"
+      :depth="84.57"
+      :scale="1.75"
+      :rotationY="180"
+      src="/models/characters/black-dog.glb"
+    />
+    <!-- #endregion -->
 
     <AmbientLight />
     <SvgMesh
@@ -683,26 +1165,46 @@ onBeforeUnmount(() => {
       :z="arrow.z"
       :rotationY="svgRotate"
     />
+    <!-- skybox="env/env1.hdr" -->
+    <!-- skybox="env/sunset_fairway_4k.hdr" -->
+    <!-- circus_maximus_1_4k.hdr -->
+    <!-- abandoned_tank_farm_04_4k.hdr -->
+
+    <!-- !je_gray_park_4k.hdr -->
+
+    <!-- alps_field_4k.hdr -->
+
+    <!-- dreifaltigkeitsberg_4k.hdr -->
+    <!-- kloppenheim_01_4k.hdr -->
+    <!-- bluesky.hdr -->
+
+    <!-- outlinePattern="models/pattern.jpeg" -->
     <Setup
       outlineColor="#ffffff"
       outlineHiddenColor="#db827f"
       :outlinePulse="2000"
-      defaultLight="env/sunset_fairway_4k.hdr"
-      :defaultLightScale="1"
-      :exposure="0.5"
-      skybox="env/env1.hdr"
+      defaultLight="env/bluesky.hdr"
+      :defaultLightScale="0.8"
+      :exposure="0.65"
+      skybox="env/bluesky.hdr"
       defaultFog="#000000"
       :bloom="bloom"
       :bloomStrength="1.1"
       :bloomRadius="0.2"
     />
+    <!-- :defaultLightScale="0.80"
+      :exposure="0.6" -->
     <LingoEditor v-if="editorOn" />
   </World>
 
+  <Transition name="dream">
+    <div class="dream" v-show="dream"></div>
+  </Transition>
+
   <Map :position="position" v-show="mapOn" />
   <!-- 阴影 -->
-  <div class="front top"></div>
-  <div class="front bottom"></div>
+  <!-- <div class="front top"></div>
+  <div class="front bottom"></div> -->
 
   <!-- news -->
   <News :newsOn="newsOn" :newsChange="newsChange" />
@@ -716,7 +1218,7 @@ onBeforeUnmount(() => {
     <!-- <button @click.stop="exitIntersect">exit</button> -->
     <span></span>
   </a>
-  <States :active="active" />
+  <States :active="active" :screenOnInStatus="screenOnInStatus" />
   <!-- bag -->
   <Bag />
   <Phone :phoneOn="phoneOn" />
@@ -725,6 +1227,35 @@ onBeforeUnmount(() => {
   <!-- Challenge -->
   <Challenge />
 
+  <!-- Screen -->
+  <Screen :screens="endScreen" :screenOn="screenOn" :ending="true" />
+
+  <!-- StartScreen -->
+  <Screen :screens="startScreen" :screenOn="startScreenOn" />
+
+  <!-- Warning -->
+  <div class="warning" :class="{ warningOn: warningOn }" v-show="warningOn">
+    <img src="/UI/hints/warning.jpg" />
+  </div>
+
+  <!-- Report -->
+
+  <Report v-if="dream" />
+
+  <!-- <button
+    class="test"
+    @click="resetView"
+    style="position: absolute; right: 0; top: 60px; color: #fff"
+  >
+    resetView
+  </button>
+  <button
+    class="test"
+    @click="changeView2"
+    style="position: absolute; right: 0; top: 90px; color: #fff"
+  >
+    changeView2
+  </button>
   <button
     class="test"
     @click="mapOn = !mapOn"
@@ -732,7 +1263,7 @@ onBeforeUnmount(() => {
   >
     Map
   </button>
-    <button
+  <button
     class="test"
     @click="editorOn = !editorOn"
     style="position: absolute; right: 0; top: 150px; color: #fff"
@@ -742,58 +1273,24 @@ onBeforeUnmount(() => {
   <button
     class="test"
     @click="emitter.emit('challenge')"
-    style="position: absolute; right: 0; top: 180px; color: #fff;z-index: 201;"
+    style="position: absolute; right: 0; top: 180px; color: #fff; z-index: 201"
   >
     challengeOn
-  </button>
-  <button
-    class="test"
-    @click="router.push({name:'Room'})"
-    style="position: absolute; right: 0; top: 210px; color: #fff;z-index: 201;"
-  >
-    toRoom
-  </button>
-  <!-- <button
-    class="test"
-    @click="getMessage"
-    style="position: absolute; right: 0; top: 180px; color: #fff"
-  >
-    getMessage
   </button> -->
+
   <!-- <button
     class="test"
-    @click="getKey(1)"
-    style="position: absolute; right: 0; top: 160px; color: #fff"
+    @click="screenOn = !screenOn"
+    style="position: absolute; right: 0; top: 240px; color: #fff; z-index: 201"
   >
-    GetKey1
+    screenOn
   </button>
   <button
     class="test"
-    @click="getKey(2)"
-    style="position: absolute; right: 70px; top: 160px; color: #fff"
+    @click="dream = !dream"
+    style="position: absolute; right: 0; top: 270px; color: #fff; z-index: 1001"
   >
-    GetKey2
-  </button>
-  <button
-    class="test"
-    @click="getKey(3)"
-    style="position: absolute; right: 0; top: 200px; color: #fff"
-  >
-    GetKey3
-  </button>
-  <button
-    class="test"
-    @click="getKey(4)"
-    style="position: absolute; right: 70px; top: 200px; color: #fff"
-  >
-    GetKey4
-  </button>
-  <button
-    class="test"
-    @click="emitter.emit('shake')"
-    style="position: absolute; right: 0; top: 240px; color: #fff"
-  >
-    shake
+    dream
   </button> -->
 
   <div style="position: absolute; z-index: -1; left: -50px">
@@ -805,6 +1302,24 @@ onBeforeUnmount(() => {
 </template>
 
 <style lang="less" scoped>
+.dream {
+  position: absolute;
+  top: 0;
+  left: 0;
+  height: 100vh;
+  width: 100vw;
+  background-color: rgba(0, 0, 0, 0.494);
+  z-index: 1000;
+  transition: all 1.5s ease;
+  opacity: 1;
+}
+
+.dream-enter-from {
+  opacity: 0;
+}
+.dream-enter-to {
+  opacity: 1;
+}
 .front {
   position: absolute;
   // background-color: rgba(0, 0, 0, 0.299);
@@ -830,7 +1345,7 @@ onBeforeUnmount(() => {
   // margin: 10px;
   border-radius: 50%;
   overflow: hidden;
-  z-index: 50;
+  z-index: 1050;
   transition: 0.7s ease 0s;
   span {
     display: block;
@@ -878,6 +1393,65 @@ onBeforeUnmount(() => {
   }
   &::after {
     transform: rotate(30deg) translate(-50%, 50%);
+  }
+}
+.warning {
+  position: absolute;
+  z-index: 200;
+  top: 60px;
+  height: 120px;
+  width: 450px;
+  // background-color: rgba(252, 155, 155, 0.576);
+  border-radius: 30px;
+  left: 0;
+  right: 0;
+  margin: 0 auto;
+  opacity: 0;
+  border-radius: 60px;
+  overflow: hidden;
+  img {
+    height: 100%;
+  }
+  transform: scale(0.8);
+}
+.warningOn {
+  animation: warning 1s linear infinite;
+}
+@keyframes warning {
+  0% {
+    opacity: 0;
+  }
+  50% {
+    opacity: 0.8;
+  }
+  100% {
+    opacity: 0;
+  }
+}
+
+.propaganda {
+  color: #fff;
+  // transform: translateX(110px) translateY(-100px);
+  -webkit-animation: prop-1bcc8722 0.8s ease 0s forwards;
+  animation: prop-1bcc8722 0.8s ease 0s forwards;
+  word-break: normal;
+  overflow-wrap: anywhere;
+  font-size: 30px;
+  max-width: 200px;
+  position: absolute;
+  // bottom: 70px;
+  left: 0px;
+  cursor: pointer;
+  font-family: "xknlt";
+}
+@keyframes prop {
+  from {
+    top: -20px;
+    opacity: 0;
+  }
+  to {
+    top: 0;
+    opacity: 1;
   }
 }
 </style>

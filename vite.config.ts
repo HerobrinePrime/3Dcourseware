@@ -51,5 +51,5 @@ export default defineConfig({
       }
     }
   },
-
+  // base:"/client/",
 })

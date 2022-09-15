@@ -56,15 +56,39 @@
               {{ undefencableContent[props.sign - 1][0].kotoba }}
             </div>
           </div>
-          <div
-            class="button"
-            :class="{ lostKey: !key }"
-            v-if="selectionOn"
+          <div 
+            class="button unkey" 
+            :class="{ lostKey: !key }" 
+            v-if="selectionOn && key" 
             style="position: absolute; right: 10px"
+            :style="{right:treasureUsed?'10px':'50px'}"
           >
-            <div class="text-wrapper" @click.once="select(1)">
-              {{ key ? defencableContent[props.sign - 1][0].kotoba : "???" }}
+            <div class="text-wrapper " >
+              <span v-show="treasureUsed" @click.once="select(1)">{{ key ? defencableContent[props.sign - 1][0].kotoba : "???" }}</span>
+            <el-popover
+              placement="top-start"
+              :width="110"
+              trigger="hover"
+              content="点击使用锦囊"
+            >
+              <template #reference>
+                <img v-show="!treasureUsed" :src="`/UI/defence/treasure${props.sign}.png`" @click="treasureUsed = true">
+              </template>
+            </el-popover>
+              
             </div>
+          </div>
+          <div class="button unkey" :class="{ lostKey: !key }" v-if="selectionOn && !key" style="position: absolute; right: 10px">
+            <el-popover
+              placement="top-start"
+              :width="200"
+              trigger="hover"
+              content="缺少锦囊，请在地图中收集"
+            >
+              <template #reference>
+                <img :src="`/UI/defence/treasure${props.sign}.png`">
+              </template>
+            </el-popover>
           </div>
         </TransitionGroup>
         <!-- 选择决定按钮 -->
@@ -92,7 +116,7 @@ import emitter from "../eventBus";
 //portraits
 const portraits = reactive(["/UI/phone/portraits/portrait0.png", "/UI/phone/portraits/portrait1.png", "/UI/phone/portraits/portrait2.png", "/UI/phone/portraits/portrait3.png"]);
 //names
-const names = reactive(['アカツキ','セイバー','義眼','大明'])
+const names = reactive(['aa眩晕','讲什么道理','某某','太阳花'])
 
 //vue const
 const props = defineProps(["count", "sign"]);
@@ -104,6 +128,7 @@ const {
     defences,
   },
   dispatch,
+  commit,
 } = useStore();
 const store = useStore()
 
@@ -133,6 +158,9 @@ const kanryou = () => {
       //请求清除记录
       dispatch("defenced", props.sign);
       //显示一些提示，表示成功
+
+      // dispatch('setProcess')
+      commit("phones")
 
       setTimeout(()=>{
         emitter.emit('success')
@@ -363,6 +391,7 @@ const scrollDown = async () => {
   // }, 500);
 };
 const input = () => {
+  if(done.value) return
   kaiwaOn.value = !kaiwaOn.value;
   scrollDown();
 };
@@ -383,6 +412,9 @@ watch(typing,(newValue,oldValue)=>{
   }
 })
 
+
+//treasure
+const treasureUsed = ref(false)
 
 </script>
 
@@ -550,8 +582,13 @@ watch(typing,(newValue,oldValue)=>{
       .lostKey {
         background-color: #00000029;
         border-radius: 17px;
-        right: 40px !important;
+        right: 50px !important;
+        cursor: auto;
       }
+      .unkey{
+        min-width: 50px;
+      }
+
       .button-hidden {
         transition: opacity 0.3s ease;
         opacity: 0;
@@ -591,4 +628,10 @@ watch(typing,(newValue,oldValue)=>{
     top: -14%;
   }
 }
+.the-key{
+  position: absolute;
+  top: 0;
+  left: 0;
+}
+
 </style>

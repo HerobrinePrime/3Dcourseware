@@ -7,12 +7,21 @@ export {}
 
 declare module '@vue/runtime-core' {
   export interface GlobalComponents {
+    AboutView: typeof import('./src/components/AboutView.vue')['default']
     Bag: typeof import('./src/components/main/bag.vue')['default']
     Challenge: typeof import('./src/components/challenge/challenge.vue')['default']
     Character: typeof import('./src/components/character.vue')['default']
     Characters: typeof import('./src/components/characters.vue')['default']
     Content: typeof import('./src/components/content.vue')['default']
     Diamond: typeof import('./src/components/main/diamond.vue')['default']
+    ElDropdown: typeof import('element-plus/es')['ElDropdown']
+    ElDropdownItem: typeof import('element-plus/es')['ElDropdownItem']
+    ElDropdownMenu: typeof import('element-plus/es')['ElDropdownMenu']
+    ElIcon: typeof import('element-plus/es')['ElIcon']
+    ElPopover: typeof import('element-plus/es')['ElPopover']
+    ElTable: typeof import('element-plus/es')['ElTable']
+    ElTableColumn: typeof import('element-plus/es')['ElTableColumn']
+    ElTag: typeof import('element-plus/es')['ElTag']
     Game: typeof import('./src/components/Game.vue')['default']
     Load: typeof import('./src/components/Load.vue')['default']
     Load2: typeof import('./src/components/Load2.vue')['default']
@@ -20,6 +29,8 @@ declare module '@vue/runtime-core' {
     Maze: typeof import('./src/components/Maze.vue')['default']
     News: typeof import('./src/components/main/news.vue')['default']
     Phone: typeof import('./src/components/main/phone.vue')['default']
+    Rank: typeof import('./src/components/Rank.vue')['default']
+    Report: typeof import('./src/components/Report.vue')['default']
     Room: typeof import('./src/components/spaces/room.vue')['default']
     RouterLink: typeof import('vue-router')['RouterLink']
     RouterView: typeof import('vue-router')['RouterView']
@@ -27,6 +38,7 @@ declare module '@vue/runtime-core' {
     SelectPanel: typeof import('./src/components/SelectPanel.vue')['default']
     Setumei: typeof import('./src/components/Setumei.vue')['default']
     States: typeof import('./src/components/main/states.vue')['default']
+    Student: typeof import('./src/components/Student.vue')['default']
   }
   export interface ComponentCustomProperties {
     vLoading: typeof import('element-plus/es')['ElLoadingDirective']

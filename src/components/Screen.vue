@@ -9,25 +9,71 @@
             v-for="screen in screens"
             :key="screen"
           >
-            <img :src="screen">
+            <img :src="screen" />
+            <div class="end-con" v-if="ending">
+              <div
+                class="content"
+                v-for="(end,index) in ends[count]"
+                :key="end"
+                :class="{ pos: start,intoEnd:!start }"
+                :style="{'transition-delay':`${pubDelay + index * 1.2}s`}"
+              >
+                {{ end }}
+              </div>
+            </div>
           </div>
         </div>
       </div>
       <Transition name="b">
-        <div class="next" v-if="!end"><img src="/UI/screen/next.png" /></div>
-        <div class="next" v-else @click="emitter.emit('screenOff')">end</div>
+        <div class="next" v-if="!end && screens.length != 1">
+          <img src="/UI/screen/next.png" />
+        </div>
+        <div class="next end" v-else @click="close" >
+          结束
+        </div>
       </Transition>
     </div>
   </Transition>
 </template>
 
-<script setup> 
-import {  nextTick, onMounted, Transition, watch,ref } from "vue";
+<script setup>
+import { nextTick, onMounted, Transition, watch, ref, reactive } from "vue";
 import Swiper from "swiper";
 import emitter from "../eventBus";
 
-const props = defineProps(["screens", "screenOn"]);
+const pubDelay = ref(1);
+
+const count = ref(0);
+const ends = reactive([
+  [
+    "恭喜你通过了重重考验，",
+    "把坏蛋打败啦！",
+    "也拯救了这个小镇的居民",
+    "让他们回到了正常的生活",
+  ],
+  [
+    "不过在这之前",
+    "这里一片黑暗，漫无天日",
+    "居民们的生活在这个虚拟世界里",
+    "不知何时才能从诈骗的阴影中走出来",
+    "直至你的到来",
+    "学习了很多关防诈骗的知识，",
+    "加上一次次失败的经验",
+    "能够在面临各种情况下都能解决危机",
+  ],
+  [
+    "现实世界里有同样的难题在等着你",
+    "身边也有很多人需要你的帮助",
+    "带着你的知识和经验",
+    "把防诈骗的意识带给他们",
+    "一起努力，世界就会更好",
+  ],
+]);
+
+const props = defineProps(["screens", "screenOn", "ending"]);
 const end = ref(false);
+let countTimer = {}
+let timer = {}
 watch(props, async (n) => {
   if (!n.screenOn) return;
   await nextTick();
@@ -45,8 +91,17 @@ watch(props, async (n) => {
     },
     on: {
       slideNextTransitionStart: function () {
-        // console.log(this.activeIndex);
-        if(this.activeIndex == n.screens.length - 1) end.value = true
+        console.log(this.activeIndex);
+        if (this.activeIndex == n.screens.length - 1) end.value = true;
+        clearTimeout(countTimer)
+        countTimer = setTimeout(()=>{
+          count.value = this.activeIndex;
+        },800)
+        start.value = false
+        clearTimeout(timer)
+        timer = setTimeout(()=>{
+          start.value = true
+        },900)
       },
     },
     //   pagination: {
@@ -54,7 +109,16 @@ watch(props, async (n) => {
     //     clickable: true,
     //   },
   });
+
+  start.value = true;
 });
+
+const start = ref(false);
+
+const close = ()=>{
+  emitter.emit('screenOff', props.ending)
+  end.value = false
+}
 
 // await nextTick();
 onMounted(() => {});
@@ -63,7 +127,7 @@ onMounted(() => {});
 <style lang="less" scoped>
 .screen-wrapper {
   position: absolute;
-  z-index: 125;
+  z-index: 2000;
   top: 0;
   left: 0;
   height: 100vh;
@@ -85,8 +149,7 @@ onMounted(() => {});
       text-align: center;
       color: #fff;
 
-
-      img{
+      img {
         // height: 100%;
         // width: 100%;
         position: absolute;
@@ -96,11 +159,9 @@ onMounted(() => {});
         right: 0;
         margin: auto;
         width: 100%;
-
       }
     }
   }
-
   .next {
     position: absolute;
     z-index: 126;
@@ -110,9 +171,21 @@ onMounted(() => {});
     font-size: 50px;
     transition: opacity 0.8s ease;
     cursor: pointer;
-    img{
+    img {
       height: 80px;
     }
+  }
+  .end {
+    height: 50px;
+    width: 130px;
+    font-family: "xknlt";
+    background-color: #e9b700;
+    border-radius: 22px;
+    font-size: 40px;
+    line-height: 42.3px;
+    text-align: center;
+    box-shadow: 0px 8px #f96f01;
+    bottom: 69px;
   }
   .b-enter-from,
   .b-leave-to {
@@ -121,6 +194,32 @@ onMounted(() => {});
   .b-enter-to,
   .b-leave-from {
     opacity: 1;
+  }
+
+  .end-con {
+    height: 100%;
+    width: 100%;
+    position: absolute;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    color: #716566;
+    font-family: "xknlt";
+    font-size: 40px;
+    .pos {
+      opacity: 1 !important;
+      top: 0 !important;
+    }
+    .intoEnd{
+      transition-delay: 0s!important;
+    }
+    .content {
+      opacity: 0;
+      position: relative;
+      // top: -20px;
+      transition: opacity 0.7s ease 1s,top 0.7s ease 1s;
+    }
   }
 }
 .v-enter-from,

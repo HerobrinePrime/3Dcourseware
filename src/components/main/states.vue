@@ -2,7 +2,17 @@
   <div class="states" :class="{ 'panel-off': active }">
     <ul>
       <li class="state">
-        <img :src="stuInfo.portrait" style="border-radius: 50%" />
+        <el-dropdown @command="log">
+          <img
+            :src="stuInfo.portrait"
+            style="border-radius: 50%; cursor: pointer"
+          />
+          <template #dropdown>
+            <el-dropdown-menu>
+              <el-dropdown-item command="logout">退出登录</el-dropdown-item>
+            </el-dropdown-menu>
+          </template>
+        </el-dropdown>
         <div class="content">{{ stuInfo.name }}</div>
       </li>
       <li class="state" style="">
@@ -17,6 +27,20 @@
         <img src="/UI/icon4.webp" />
         <div class="content">班级:&nbsp;&nbsp;{{ stuInfo.class }}</div>
       </li>
+      <li class="state" style="width: 10%">
+        <el-popover
+          placement="top-start"
+          :width="150"
+          trigger="hover"
+          content="点击以查看说明"
+        >
+          <template #reference>
+            <el-icon style="cursor: pointer; color: #fff; font-size: 20px" @click="screenOnInStatus"
+              ><QuestionFilled
+            /></el-icon>
+          </template>
+        </el-popover>
+      </li>
     </ul>
   </div>
 </template>
@@ -26,19 +50,22 @@ import { computed, watch } from "vue";
 import { useStore } from "vuex";
 
 export default {
-  props: ["active"],
+  props: ["active","screenOnInStatus"],
   setup(props) {
     const store = useStore();
 
     const stuInfo = computed(() => {
       return store.state.student;
     });
-    
-    
+
+    const log = (command) => {
+      localStorage.removeItem("token");
+      location.href = "/";
+    };
 
     return {
       stuInfo,
-      
+      log,
     };
   },
 };
@@ -52,7 +79,7 @@ export default {
 @del: 0.2s;
 .states {
   position: absolute;
-  z-index: 49;
+  z-index: 201;
   background-color: @panel-back-color;
   box-shadow: 0px 5px 5px @panel-box-shadow;
   transition: all 0.7s ease 0s;
@@ -71,6 +98,7 @@ export default {
     height: 100%;
     width: 70vw;
     // transition: all 0.7s ease 0s;
+    display: flex;
     .state {
       // width: 25%;
       color: @font-color;
@@ -107,7 +135,7 @@ export default {
         width: 20%;
       }
       &:nth-of-type(4) {
-        width: 30%;
+        width: 20%;
       }
     }
   }

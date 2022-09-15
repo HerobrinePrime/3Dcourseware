@@ -1,51 +1,53 @@
 <template>
-  <div class="states" :class="{ 'panel-off': active ,'hidden': hidden}"  @mousewheel.stop="">
-  <teleport to='body'>
-    <Transition name="el-fade-in-linear">
-      <Setumei v-if="setumeiPanelOn" :akashi="akashi"  @mousewheel.stop=""/>
-    </Transition>
-  </teleport>
+  <div class="states" :class="{ 'panel-off': active ,'hidden': hidden}"  @mousewheel.stop="" @mouseleave="setumeiOff">
+    <teleport to='body'>
+      <Transition name="el-fade-in-linear">
+        <Setumei v-if="setumeiPanelOn" :akashi="akashi"  @mousewheel.stop="" @mouseleave="setumeiOff"/>
+      </Transition>
+    </teleport>
     <div class="button">
-      <img src="/UI/bag/btn.png" @click="store.commit('BAGCHANGE',!active)">
+      <img src="/UI/bag/btn.png" @click="btnClicked" @mouseleave="setumeiOff">
     </div>
     <!-- <button @click="bag.thebook">book</button>
     <button @click="bag.thephone">phone</button>
     <div class="item" :class="{'has-item':keys.has(1)}"></div> -->
-    <div class="items" @click="bag.thebook">
+    <div class="items" @click="bag.thebook" @mouseleave="setumeiOff" @mouseenter="setumeiOff">
       <img class="item-bc" src="/UI/bag/item-bc.png" />
       <div class="item has-item">
-        <img src="/UI/bag/book.png" @mouseover="setumeiOn('/UI/bag/book.png')" @mouseleave="setumeiOff"/>
+        <!-- <img src="/UI/bag/book.png" @mouseover="setumeiOn('/UI/bag/book.png')" @mouseleave="setumeiOff"/> -->
+        <img src="/UI/bag/book.png"/>
       </div>
     </div>
-    <div class="items" @click="bag.thephone">
+    <div class="items" @click="bag.thephone" @mouseleave="setumeiOff" @mouseenter="setumeiOff">
       <img class="item-bc" src="/UI/bag/item-bc.png" />
       <div class="item has-item" :class="{'shake':shaking}">
-        <img src="/UI/bag/phone.png" @mouseover="setumeiOn('/UI/bag/phone.png')" @mouseleave="setumeiOff"/>
+        <!-- <img src="/UI/bag/book.png" @mouseover="setumeiOn('/UI/bag/book.png')" @mouseleave="setumeiOff"/> -->
+        <img src="/UI/bag/phone.png"/>
       </div>
     </div>
 
     <div class="items">
       <img class="item-bc" src="/UI/bag/item-bc.png" />
-      <div class="item " :class="{'has-item':keyItem > 0}">
-        <img :src="treasureArray[0]" @mouseover="setumeiOn(treasureArray[0])" @mouseleave="setumeiOff"/>
+      <div class="item " :class="{'has-item':keyItem > 0}" @mouseover="setumeiOn(treasureArray[0])" @mouseleave="setumeiOff">
+        <img :src="treasureArray[0]" v-if="treasureArray[0]"/>
       </div>
     </div>
     <div class="items">
       <img class="item-bc" src="/UI/bag/item-bc.png" />
-      <div class="item " :class="{'has-item':keyItem > 1}">
-        <img :src="treasureArray[1]" @mouseover="setumeiOn(treasureArray[1])" @mouseleave="setumeiOff"/>
+      <div class="item " :class="{'has-item':keyItem > 1}" @mouseover="setumeiOn(treasureArray[1])" @mouseleave="setumeiOff">
+        <img :src="treasureArray[1]" v-if="treasureArray[1]"/>
       </div>
     </div>
     <div class="items">
       <img class="item-bc" src="/UI/bag/item-bc.png" />
-      <div class="item " :class="{'has-item':keyItem > 2}">
-        <img :src="treasureArray[2]" @mouseover="setumeiOn(treasureArray[2])" @mouseleave="setumeiOff"/>
+      <div class="item " :class="{'has-item':keyItem > 2}" @mouseover="setumeiOn(treasureArray[2])" @mouseleave="setumeiOff">
+        <img :src="treasureArray[2]" v-if="treasureArray[2]"/>
       </div>
     </div>
     <div class="items">
       <img class="item-bc" src="/UI/bag/item-bc.png" />
-      <div class="item " :class="{'has-item':keyItem > 3}">
-        <img :src="treasureArray[3]" @mouseover="setumeiOn(treasureArray[3])" @mouseleave="setumeiOff"/>
+      <div class="item " :class="{'has-item':keyItem > 3}" @mouseover="setumeiOn(treasureArray[3])" @mouseleave="setumeiOff">
+        <img :src="treasureArray[3]" v-if="treasureArray[3]"/>
       </div>
     </div>
 
@@ -60,6 +62,10 @@
       <div class="item ">
         <img src="/UI/bag/book.png" />
       </div>
+    </div>
+
+    <div class="awa" :class="{'awa-on':true,'awa-off':awaOff}" @click="dialog">
+      <img src="/UI/bag/awa.png">
     </div>
   </div>
 
@@ -152,6 +158,13 @@ export default {
     });
 
     const shaking = ref(false)
+    const awaOff = ref(true)
+    const dialog = ()=>{
+      awaOff.value = true
+      setTimeout(()=>{
+        emitter.emit('awa-bag')
+      },500)
+    }
 
     //事件总线
     onMounted(() => {
@@ -159,10 +172,35 @@ export default {
         shaking.value = true
         setTimeout(()=>{shaking.value= false},800)
       })
+      emitter.on('awaOff',(off)=>{
+        awaOff.value = true
+        setTimeout(()=>{
+          awaOff.value = off
+        },300)
+      })
+
+      emitter.on('setumeiOff',()=>{
+        console.log("store -> emit setumeiOff");
+        setumeiOff()
+      })
     });
     onBeforeUnmount(()=>{
       emitter.off('shake')
+      emitter.off('awaOff')
+      emitter.off('setumeiOff')
     })
+
+    let btnTimer = {}
+    const btnClicked = ()=>{
+        clearTimeout(btnTimer)
+        // awaOff.value = true
+        if(active.value){
+          btnTimer = setTimeout(()=>{
+            store.commit('BAGCHANGE',true)
+          },4500)
+        }
+        store.commit('BAGCHANGE',!active.value)
+      }
 
     return {
       store,
@@ -177,6 +215,9 @@ export default {
       setumeiOn,
       setumeiOff,
       akashi,
+      btnClicked,
+      awaOff,
+      dialog,
     };
   },
 };
@@ -280,6 +321,86 @@ export default {
       margin: auto;
       width: 100%;
       cursor: pointer;
+    }
+  }
+  .awa{
+    // height: 10vh;
+    width: 20vh;
+    position: absolute;
+    // background-color: aqua;
+    left: -20vh;
+    top: 5vh;
+    cursor: pointer;
+    img{
+      transform: scaleX(-1);
+    }
+    transform: scale3d(1,0,1);
+  }
+  .awa-on{
+    animation: rub1 0.5s ease forwards;
+  }
+  .awa-off{
+    animation: rub2 0.5s ease forwards;
+  }
+  @keyframes rub1 {
+    0% {
+        -webkit-transform: scale3d(1,0,1);
+        transform: scale3d(1,0,1);
+    }
+
+    30% {
+        -webkit-transform: scale3d(1.25, 0.75, 1);
+        transform: scale3d(1.25, 0.75, 1);
+    }
+    40% {
+        -webkit-transform: scale3d(0.75, 1.25, 1);
+        transform: scale3d(0.75, 1.25, 1);
+    }
+    50% {
+        -webkit-transform: scale3d(1.15, 0.85, 1);
+        transform: scale3d(1.15, 0.85, 1);
+    }
+    65% {
+        -webkit-transform: scale3d(0.95, 1.05, 1);
+        transform: scale3d(0.95, 1.05, 1);
+    }
+    75% {
+        -webkit-transform: scale3d(1.05, 0.95, 1);
+        transform: scale3d(1.05, 0.95, 1);
+    }
+    100% {
+        -webkit-transform: scale3d(1, 1, 1);
+        transform: scale3d(1, 1, 1);
+    }
+  }
+  @keyframes rub2 {
+    0% {
+      -webkit-transform: scale3d(1, 1, 1);
+        transform: scale3d(1, 1, 1);
+    }
+    30% {
+        -webkit-transform: scale3d(1.05, 0.95, 1);
+        transform: scale3d(1.05, 0.95, 1);
+    }
+    40% {
+      -webkit-transform: scale3d(0.95, 1.05, 1);
+        transform: scale3d(0.95, 1.05, 1);
+    }
+    50% {
+        -webkit-transform: scale3d(1.15, 0.85, 1);
+        transform: scale3d(1.15, 0.85, 1);
+    }
+    65% {
+        -webkit-transform: scale3d(0.75, 1.25, 1);
+        transform: scale3d(0.75, 1.25, 1);
+    }
+    75% {
+        -webkit-transform: scale3d(1.25, 0.75, 1);
+        transform: scale3d(1.25, 0.75, 1);
+    }
+    100% {
+        -webkit-transform: scale3d(1,0,1);
+        transform: scale3d(1,0,1);
     }
   }
 }

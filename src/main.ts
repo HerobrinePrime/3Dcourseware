@@ -11,6 +11,8 @@ import * as ElIcon from '@element-plus/icons-vue'
 import store from "./store";
 import { routes } from "./router/router"
 
+import 'animate.css';
+
 const router = createRouter({
     history: createWebHashHistory(),
     routes

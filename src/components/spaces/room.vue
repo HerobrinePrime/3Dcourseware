@@ -1,5 +1,5 @@
 <template>
-  Room asdfasd
+  
   <div class="test">
     <button @click="toMaze">toMaze</button>
   </div>

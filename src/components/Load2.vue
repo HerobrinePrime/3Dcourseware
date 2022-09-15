@@ -5,6 +5,7 @@ import { useStore } from "vuex";
 import { usePreload } from "lingo3d-vue";
 import { Transition } from "@vue/runtime-dom";
 import Maze from "./Maze.vue";
+import emitter from "../eventBus";
 
 const { dispatch } = useStore();
 
@@ -71,6 +72,9 @@ const progress = usePreload(
   ],
   "77.3MB"
 );
+
+// const progress = ref(100)
+
 const loaded = computed(() => {
   return progress.value == 100;
 });
@@ -82,6 +86,7 @@ const loaded = computed(() => {
 const started = ref(false);
 const getStart = () => {
   started.value = true;
+  emitter.emit("mazeStart")
 };
 
 onMounted(() => {

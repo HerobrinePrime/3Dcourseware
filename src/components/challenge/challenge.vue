@@ -14,14 +14,20 @@ import { request } from "../../request";
 
 const alpha = reactive(["A", "B", "C", "D"]);
 
-const props = defineProps(['model'])
-console.log(props);
+const props = defineProps(["model"]);
 
 const challengeOn = ref(false);
 const model = ref(0); //0简单模式,1困难模式
+if (props.model == 1) {
+  model.value = 1;
+}
 const rank = ref(0);
 
-const { state } = useStore();
+const { state, dispatch } = useStore();
+if (state.questions.size == 0) {
+  dispatch("getAllQuestions");
+}
+const store = useStore();
 const questions = computed(() => {
   if (model.value == 0) {
     return [
@@ -57,6 +63,9 @@ const answer = (index) => {
   }
 };
 const commit = () => {
+  //答题了
+  store.commit("questions");
+
   //round
   inRound.value = false;
   //计时器
@@ -76,6 +85,7 @@ const commit = () => {
   if (sign) {
     //right
     right();
+    store.commit("solved");
   } else {
     //wrong
     wrong();
@@ -89,24 +99,39 @@ const catImg = ref("/UI/challenge/good.png");
 const dogImg = ref("/UI/challenge/bad.png");
 const catAnime = ref("");
 const dogAnime = ref("");
+const catThrowEgg = ref(false);
+const dogThrowEgg = ref(false);
+const bannerOn = ref(false);
 const right = async () => {
   clearTimeout(rightWrongTimer);
   boss.remain--;
 
   //anime
-  dogImg.value = "/UI/challenge/bad_egg.png";
+  catThrowEgg.value = true;
+  setTimeout(() => {
+    catThrowEgg.value = false;
+  }, 200);
+  setTimeout(() => {
+    dogImg.value = "/UI/challenge/bad_egg.png";
+  }, 100);
   dogAnime.value = "dogAnime";
 
   setTimeout(() => {
     dogImg.value = "/UI/challenge/bad.png";
-  }, 560);
+  }, 660);
   rightWrongTimer = setTimeout(() => {
     detection();
     // dogImg.value = "/UI/challenge/bad.png";
     dogAnime.value = "";
   }, 1500);
 
+  console.log("right");
+  if (boss.remain == 0) bannerOn.value = true;
+
   //request
+  // console.log("*********************type***********************");
+  // console.log(question.question.type);
+  // console.log(question.question.ty);
   const res = await request({
     url: "/student/rightWrong",
     method: "POST",
@@ -115,26 +140,38 @@ const right = async () => {
       sign: "right",
     },
   });
-  console.log(res);
+  // console.log(res);
 };
 const wrong = async () => {
   clearTimeout(rightWrongTimer);
   self.remain--;
 
   //anime
-  catImg.value = "/UI/challenge/good_egg.png";
+  dogThrowEgg.value = true;
+  setTimeout(() => {
+    dogThrowEgg.value = false;
+  }, 200);
+  setTimeout(() => {
+    catImg.value = "/UI/challenge/good_egg.png";
+  }, 100);
   catAnime.value = "catAnime";
 
   setTimeout(() => {
     catImg.value = "/UI/challenge/good.png";
-  }, 560);
+  }, 660);
   rightWrongTimer = setTimeout(() => {
     detection();
 
     catAnime.value = "";
   }, 1500);
 
+  console.log("wrong");
+  // if(self.remain == 0) bannerOn.value = true
+
   //request
+  // console.log("*********************type***********************");
+  // console.log(question.question.type);
+  // console.log(question.question.ty);
   const res = await request({
     url: "/student/rightWrong",
     method: "POST",
@@ -143,7 +180,7 @@ const wrong = async () => {
       sign: "wrong",
     },
   });
-  console.log(res);
+  // console.log(res);
 };
 
 //process control
@@ -152,6 +189,7 @@ watch(challengeOn, (newValue) => {
   if (newValue) {
     start();
   } else {
+    console.log("turn off");
     clearInterval(timer);
     inRound.value = false;
     question.question = {};
@@ -179,7 +217,7 @@ const start = () => {
   //开场动画
   startTimer = setTimeout(() => {
     round();
-  }, 2000);
+  }, 1000);
 };
 const round = () => {
   inRound.value = true;
@@ -187,24 +225,31 @@ const round = () => {
   countStart();
 };
 const detection = () => {
+  //1500
+  bannerOn.value = false;
+
   clear();
   if (boss.remain == 0) {
     //pass
     console.log("pass");
-    challengeOn.value = false
-    emitter.emit("challengeDone",true)
-    
+    if (model.value == 0) {
+      challengeOn.value = false;
+      emitter.emit("challengeDone", true);
+      return;
+    } else {
+      rank.value++;
+      if (rank.value == 3) rank.value = 0;
+      start();
+    }
   } else if (self.remain == 0) {
     //die
     console.log("die");
-    challengeOn.value = false
-    emitter.emit("challengeDone",false)
+    challengeOn.value = false;
+    emitter.emit("challengeDone", false);
   } else {
     //new round
     round();
   }
-
-  
 };
 
 //let count down
@@ -249,8 +294,13 @@ onBeforeUnmount(() => {
 </script>
 
 <template>
-  <transition name="el-fade-in">
+  <transition name="c">
     <div class="challenge" v-if="challengeOn">
+      <i
+        class="iconfont icon-xiangzuo1"
+        v-if="model == 1"
+        @click="challengeOn = false"
+      ></i>
       <!-- {{question.question}} -->
       <div class="remain">
         <div class="num">
@@ -341,12 +391,25 @@ onBeforeUnmount(() => {
           </div>
         </div>
       </div>
+      <div
+        class="banner"
+        :style="{
+          opacity: bannerOn ? 1 : 0,
+        }"
+      >
+        <!-- banner img-->
+        <img src="/UI/hints/victory.png" />
+      </div>
+      <div class="egg" :class="{ eggfly: catThrowEgg, eggfly2: dogThrowEgg }">
+        <img src="/UI/challenge/egg.png" />
+      </div>
     </div>
   </transition>
 </template>
 
 <style lang="less" scoped>
 .challenge {
+  transition: opacity 0.8s linear;
   position: absolute;
   z-index: 200;
   height: 100%;
@@ -363,6 +426,14 @@ onBeforeUnmount(() => {
   background-repeat: no-repeat;
   background-size: 100% 100%;
   padding: 5.5vh 5.7%;
+  .iconfont {
+    font-size: 25px;
+    cursor: pointer;
+    position: absolute;
+    z-index: 100;
+    left: 30px;
+    top: 25px;
+  }
   // padding-top:12.6%  ;
   & > div {
     width: 100%;
@@ -512,7 +583,7 @@ onBeforeUnmount(() => {
         right: 70px;
       }
       .catAnime {
-        animation: jump1 1.4s ease;
+        animation: jump1 1.4s ease 0.1s;
       }
       @keyframes jump1 {
         0% {
@@ -556,7 +627,7 @@ onBeforeUnmount(() => {
         left: 70px;
       }
       .dogAnime {
-        animation: jump2 1.4s ease;
+        animation: jump2 1.4s ease 0.1s;
       }
       @keyframes jump2 {
         0% {
@@ -687,5 +758,85 @@ onBeforeUnmount(() => {
       }
     }
   }
+  .back {
+    position: absolute;
+    z-index: 100;
+    top: 0px;
+    left: 35px;
+    height: 50px;
+    width: 50px;
+    font-size: 50px;
+    transform: scaleY(1.5);
+    // background-color: aqua;
+    cursor: pointer;
+  }
+  .banner {
+    height: 130px;
+    min-width: 0%;
+    width: 334px;
+    position: absolute;
+    /* background-color: aqua; */
+    top: 113px;
+    right: 0;
+    left: 0;
+    margin: 0 auto;
+    opacity: 0;
+  }
+  .egg {
+    width: 42px;
+    height: 55.8px;
+    opacity: 0;
+    position: absolute;
+    z-index: 100;
+    top: 210px;
+    left: 27%;
+    transform: rotate(272deg);
+  }
+  .eggfly {
+    animation: eggfly 0.2s ease;
+  }
+  @keyframes eggfly {
+    0% {
+      opacity: 1;
+      left: 25%;
+      transform: rotate(272deg);
+    }
+    50% {
+      top: 180px;
+      transform: rotate(302deg);
+    }
+    100% {
+      opacity: 1;
+      left: 71%;
+      transform: rotate(332deg);
+    }
+  }
+  .eggfly2 {
+    animation: eggfly2 0.2s ease;
+  }
+  @keyframes eggfly2 {
+    0% {
+      opacity: 1;
+      left: 71%;
+      transform: rotate(133deg);
+    }
+    50% {
+      top: 180px;
+      transform: rotate(103deg);
+    }
+    100% {
+      opacity: 1;
+      left: 25%;
+      transform: rotate(73deg);
+    }
+  }
+}
+.c-enter-from,
+.c-leave-to {
+  opacity: 0;
+}
+.c-enter-to,
+.c-leave-from {
+  opacity: 1;
 }
 </style>

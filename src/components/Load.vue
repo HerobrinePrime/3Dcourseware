@@ -1,9 +1,15 @@
 <script setup>
-import { computed, ref, watch } from "@vue/runtime-core";
+import { computed, onMounted, ref, watch } from "@vue/runtime-core";
 import { usePreload } from "lingo3d-vue";
 import { useRouter } from "vue-router";
 import { Transition } from "@vue/runtime-dom";
+import { useStore } from "vuex";
 import Game from "./Game.vue";
+
+const { dispatch } = useStore();
+onMounted(() => {
+  dispatch("getAllQuestions");
+});
 
 // export default {
 //   components: {
@@ -76,6 +82,7 @@ const progress = usePreload(
   ],
   "60.2MB"
 );
+// const progress = ref(100)
 
 const loaded = computed(() => {
   return progress.value == 100;

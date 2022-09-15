@@ -176,7 +176,13 @@ watch(stuInfo, async (cur, prev) => {
   await nextTick();
   hasResult.value = true;
   resultStatus.value = 1;
+
   setTimeout(() => {
+    // if (form.status == "teacher") {
+    //   //跳转到教师端
+    //   location.href = "http://localhost:8080/";
+    //   return
+    // }
     logined.value = true;
 
     // logining.value = false;
@@ -184,6 +190,7 @@ watch(stuInfo, async (cur, prev) => {
       loginEnd.value = true;
       bigHidden.value = false;
       selectPanelOn.value = true;
+      
     }, 800);
   }, resultTime);
 });
@@ -198,10 +205,10 @@ const login = async () => {
       //成功结果
       //渲染结束回调
       //states stuInfo更新
-      if (form.status == "teacher") {
-        //跳转到教师端
-        location.href = "ToTeacher*********************";
-      }
+      // if (form.status == "teacher") {
+      //   //跳转到教师端
+      //   location.href = "http://localhost:8080/";
+      // }
     } else {
       hasResult.value = true;
       resultStatus.value = -1;
@@ -370,6 +377,7 @@ const enterIntersect = (num) => {
   store.dispatch("setProcess", num);
 
   activatedNews.set(num);
+  store.commit("news",activatedNews.size)
 
   console.log("enterIntersect");
   changeView();
@@ -474,8 +482,11 @@ const onTheTriggerEnter = () => {
 //#endregion
 
 //screens
-const screens = ["/UI/screen/0.png", "/UI/screen/1.png", "/UI/screen/2.png"];
+const screens = ["/UI/screen/0.png", "/UI/screen/1.png", "/UI/screen/2.png","/UI/screen/3.png"];
 const screenOn = ref(false);
+const screenOnInStatus = ()=>{
+  screenOn.value = true
+}
 
 //select-panel
 const selectPanelOn = ref(false);
@@ -513,6 +524,11 @@ const Maze = ()=>{
 //bag事件总线
 //#region
 onMounted(() => {
+  // loginEnd.value = true
+  if(localStorage.getItem('token')){
+    store.dispatch("testToken")
+  }
+
   emitter.on("*", () => {
     // console.log("******");
     bagChange(true);
@@ -531,11 +547,15 @@ onMounted(() => {
   });
   emitter.on("screenOff", () => {
     screenOn.value = false;
+    setTimeout(()=>{
+      active.value = false
+    },1200)
   });
   emitter.on("selectOff", () => {
     selectPanelOn.value = false;
     setTimeout(() => {
       screenOn.value = true;
+      orbitCamera.autoRotate = false
     }, 1000);
   });
 });
@@ -846,7 +866,8 @@ onBeforeUnmount(() => {
         :bloomStrength="1.1"
         :bloomRadius="0.2"
       />
-      <LingoEditor v-if="lingoEditor" />
+      <!-- <LingoEditor v-if="true" /> -->
+      <LingoEditor v-if="false" />
     </World>
     <Editor v-if="editor" />
   </div>
@@ -873,17 +894,18 @@ onBeforeUnmount(() => {
   >
     Maze
   </button> -->
-  <button
+  <!-- <button
     class="test"
     @click="emitter.emit('unlock')"
     style="position: absolute; z-index: 500; right: 0; top: 220px; color: #fff"
   >
     Unlock
-  </button>
+  </button> -->
   <!-- 学生信息 -->
-  <States :active="active" />
+  <States :active="active" :screenOnInStatus="screenOnInStatus"/>
   <!-- bag -->
   <Bag :hidden="bigHidden" />
+  
   <!-- book -->
   <transition name="news">
     <div class="news" v-if="newsOn"  @mousewheel.stop="">
@@ -1810,7 +1832,7 @@ onBeforeUnmount(() => {
   // margin: 10px;
   border-radius: 50%;
   overflow: hidden;
-  z-index: 50;
+  z-index: 1000;
   transition: 0.7s ease 0s;
   span {
     display: block;
