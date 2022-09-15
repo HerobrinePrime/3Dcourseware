@@ -1,17 +1,16 @@
 <template>
   <World>
     <Model
-      src="/models/mid/screen.glb"
+      src="/models/main/screen.glb"
       :scale="10"
       physics="map"
       toon
-      @mouse-down="mapDown"
-      @click="mapOnClick"
       :y="-827.09"
       id="map"
       name="map"
       :metalnessFactor="0"
     >
+      <Find name="ground" @click="mapOnClick"></Find>
     </Model>
     <Setup
       outlineColor="#ffffff"
@@ -22,7 +21,7 @@
       :exposure="0.5"
       skybox="/env/env1.hdr"
       defaultFog="#000000"
-      :bloom="bloom"
+      :bloom="false"
       :bloomStrength="1.1"
       :bloomRadius="0.2"
     />
@@ -34,7 +33,7 @@
 import { ref } from "@vue/reactivity";
 import { World, Cube, LingoEditor, Model, Setup } from "lingo3d-vue";
 
-const lingoEditor = ref(true)
+const lingoEditor = ref(true);
 </script>
 
 
