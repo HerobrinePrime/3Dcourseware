@@ -1,5 +1,6 @@
 import Load from "../components/Load.vue";
 import Load2 from "../components/Load2.vue"
+import Load3 from "../components/Load3.vue"
 
 import Room from "../components/spaces/room.vue"
 
@@ -16,6 +17,11 @@ const routes = [
         meta:{
             keepAlive:true
         }
+    },
+    {
+        name: 'episode',
+        path: '/episode',
+        component: Load3,
     },
     {
         name: 'Room',
