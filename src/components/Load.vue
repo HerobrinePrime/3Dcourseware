@@ -5,10 +5,15 @@ import { useRouter } from "vue-router";
 import { Transition } from "@vue/runtime-dom";
 import { useStore } from "vuex";
 import Game from "./Game.vue";
+import emitter from '../eventBus.js'
+
+// const audio = ref()
 
 const { dispatch } = useStore();
 onMounted(() => {
   dispatch("getAllQuestions");
+
+  // console.log(audio.v);
 });
 
 // export default {
@@ -95,6 +100,9 @@ const loaded = computed(() => {
 const started = ref(false);
 const getStart = () => {
   started.value = true;
+  emitter.emit('audioOn')
+  // console.log();
+  // audio.value.play()
 };
 
 // return {
@@ -105,6 +113,8 @@ const getStart = () => {
 // };
 // },
 // };
+
+
 </script>
 
 <template>
@@ -140,6 +150,7 @@ const getStart = () => {
   </Transition>
   <div class="wrapper" :class="{ show: started }"><Game /></div>
 
+  
   <div class="load-font">asdf</div>
 </template>
 

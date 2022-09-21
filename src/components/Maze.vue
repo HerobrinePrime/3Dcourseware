@@ -583,6 +583,12 @@ onBeforeUnmount(() => {
 
   emitter.off("awa-bag");
 });
+
+const chect = ()=>{
+  setTimeout(() => {
+      screenOn.value = true;
+    }, 1000);
+}
 </script>
 
 <template>
@@ -1284,14 +1290,21 @@ onBeforeUnmount(() => {
     style="position: absolute; right: 0; top: 240px; color: #fff; z-index: 201"
   >
     screenOn
-  </button>
-  <button
+  </button>-->
+  <!-- <button
     class="test"
     @click="dream = !dream"
     style="position: absolute; right: 0; top: 270px; color: #fff; z-index: 1001"
   >
     dream
   </button> -->
+  <button
+    class="test"
+    @click="chect"
+    style="position: absolute; right: 0; top: 300px; color: #fff; z-index: 1001"
+  >
+    Ending
+  </button>
 
   <div style="position: absolute; z-index: -1; left: -50px">
     <img src="/UI/defence/treasure1.png" />

@@ -11,9 +11,24 @@
     
     const progress = usePreload(
       [
-        
+        '/models/characters/rabbit-with-wise-eyes.glb',
+        '/models/characters/dog-with-black-tail.glb',
+        '/models/characters/dog-with-brown-fur.glb',
+        '/models/characters/cat-with-orange-skin.glb',
+        '/models/characters/rabbit-with-sunglass.glb',
+        '/models/characters/black-dog.glb',
+        '/models/main/cat.fbx',
+        '/models/mid/screen.glb',
+        '/svg/arrow.svg',
+        '/UI/porter2.png',
+        '/env/env1.hdr',
+        '/UI/dialog/dialog.png',
+        '/UI/dialog/cat.png',
+        '/UI/dialog/dog.png',
+        '/UI/dialog/rabbit.png',
+        '/UI/dialog/next.png',
       ],
-      "1MB"
+      "37.1MB"
     );
     
     // const progress = ref(100)
@@ -29,7 +44,7 @@
     const started = ref(false);
     const getStart = () => {
       started.value = true;
-      emitter.emit("mazeStart")
+      emitter.emit("midStart")
     };
     
 

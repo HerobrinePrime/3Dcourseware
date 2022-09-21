@@ -1,5 +1,24 @@
-<script setup lang="ts">
-import { Transition } from "vue";
+<script setup >
+import { Transition,onMounted,ref,onBeforeUnmount } from "vue";
+import emitter from "./eventBus.js";
+
+const audio = ref()
+
+onMounted(()=>{
+  emitter.on('audioOn',()=>{
+    audio.value.play()
+  })
+
+  // emitter.on('audioOff',()=>{
+  //   let v = audio.value.volume
+  //   console.log(v);
+  // })
+})
+
+onBeforeUnmount(()=>{
+  emitter.off('audioOn')
+  emitter.off('audioOff')
+})
 </script>
 
 
@@ -14,6 +33,7 @@ import { Transition } from "vue";
 
 <template>
   <router-view></router-view>
+  <audio src="/01.mp3" ref="audio" loop ></audio>
 </template>
 
 <style>
