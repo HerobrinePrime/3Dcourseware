@@ -233,7 +233,8 @@ const Maze = () => {
       sprite.onLoop = undefined;
       fade.value = true;
       setTimeout(() => {
-        toMaze();
+        // toMaze();
+        endNotePanelOn.value = true
       }, 2500);
     }
   };
@@ -245,9 +246,40 @@ const done = ref(0)
 
 //#endregion
 
+const endNotePanelOn = ref(false)
+
+const doneNum = ref(2)
+const doneOn = ref(false)
+const donePanelOn = ()=>{
+  if(done.value == 3) return
+  doneNum.value = 2
+  setTimeout(() => {
+    doneOn.value = true
+  }, 1000);
+}
+
 //bag事件总线
 //#region
 onMounted(() => {
+  emitter.on("challengeDone",()=>{
+    //挑战完成
+    setTimeout(() => {
+      toMaze()
+    }, 800);
+  })
+  emitter.on("noteOFf",()=>{
+    endNotePanelOn.value = false
+    console.log("challenge");
+    // endSS.value = true
+    setTimeout(() => {
+      emitter.emit("challenge");
+    }, 800);
+  })
+
+  emitter.on('doneOff',()=>{
+    doneOn.value = false
+  })
+
   resetView()
   // loginEnd.value = true
   if (localStorage.getItem("token")) {
@@ -285,6 +317,7 @@ onMounted(() => {
     console.log("interactionEnded");
     interacting.value = false;
     resetView();
+    donePanelOn()
   });
   emitter.on("lookat", ({ x, z }) => {
     const hito = person.value;
@@ -295,6 +328,14 @@ onMounted(() => {
   emitter.on("done",()=>{
     done.value++
     if(done.value === 3){
+
+      rewardOn.value = true
+      reward.value = 2
+      store.commit('REWARD',2)
+      setTimeout(() => {
+        rewardOn.value = false
+      }, 2500);
+
       const hito = person.value
       hito.onLoop = ()=>{
         hito.lookTo(0,undefined,0,0.15)
@@ -319,6 +360,11 @@ onMounted(() => {
     }, 1500);
     setTimeout(() => {
       active.value = false
+      processPanel.value = true
+      setTimeout(() => {
+        processPanel.value = false
+        active.value = true 
+      }, 4000);
     }, 2000);
   });
 
@@ -327,6 +373,7 @@ onMounted(() => {
     screenOn.value = false;
     setTimeout(() => {
       active.value = false;
+      
     }, 1200);
     // setTimeout(() => {
     //   router.replace({name:'main'})
@@ -334,6 +381,9 @@ onMounted(() => {
   });
 });
 onBeforeUnmount(() => {
+  emitter.off("challengeDone")
+  emitter.off("noteOFf")
+  emitter.off('doneOff')
   emitter.off("*");
   emitter.off("thebook");
   emitter.off("thephone");
@@ -349,6 +399,11 @@ onBeforeUnmount(() => {
 //#endregion
 
 const editor = ref(false);
+
+const processPanel = ref(false)
+
+const rewardOn = ref(false)
+const reward = ref(-1)
 </script>
     
     <template>
@@ -586,7 +641,33 @@ const editor = ref(false);
 
   <!-- Screen -->
   <Screen :screens="screens" :screenOn="screenOn" />
+
+  <!-- Process -->
+  <transition name="p">
+    <Process v-if="processPanel" :process='2'/>
+  </transition>
+
+  <!-- Reward -->
+  <transition name="r">
+    <Reward v-if="rewardOn" :reward="reward"  key="1"/>
+  </transition>
+
+  <!-- Done -->
+  <transition name="r">
+    <Done v-if="doneOn" :doneNum="doneNum" :doneCount="done"/>
+  </transition>
+
+    <!-- endNotePanelOn NotePanel -->
+    <transition name="p">
+    <NotePanel v-if="endNotePanelOn" :endCount="2"/>
+  </transition>
+
+  <!-- Challenge -->
+  <Challenge  :exe="true"/>
+
 </template>
+
+
     
     <style lang="less" scoped>
 @panel-back-color:rgba(65, 59, 117, 0.7);
@@ -1286,5 +1367,34 @@ const editor = ref(false);
 }
 //小屏
 @media (max-width: 768px) {
+}
+
+.p-enter-active,
+
+.p-leave-active{
+  transition: all 0.8s linear;
+}
+.p-enter-from,
+.p-leave-to{
+    opacity: 0;
+}
+.p-leave-from,
+.p-enter-to{
+    opacity: 1;
+}
+
+.r-enter-active,
+.r-leave-active{
+  transition: all 0.8s cubic-bezier(.87,-0.28,.13,1.27);
+}
+.r-enter-from,
+.r-leave-to{
+    // top: 100vh;
+    transform: translate(0, 100vh);
+}
+.r-leave-from,
+.r-enter-to{
+    // top: 0;
+    transform: translate(0, 0vh);
 }
 </style>

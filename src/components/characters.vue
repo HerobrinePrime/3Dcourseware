@@ -182,7 +182,8 @@ const tuzuki = () => {
   if (reject) return;
   count.value++;
   console.log(count.value);
-  if (count.value >= state.kaiwa[kaiwa].length) {
+  if (count.value >= state.kaiwa[kaiwa]?.length) {
+    console.log("****************----------------")
     reject = true;
     setTimeout(() => {
       reject = false;

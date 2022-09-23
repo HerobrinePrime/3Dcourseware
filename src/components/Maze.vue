@@ -34,6 +34,7 @@ import {
   Transition,
   watch,
   watchEffect,
+  defineProps,
 } from "vue";
 import { useStore } from "vuex";
 import { useRoute, useRouter } from "vue-router";
@@ -81,6 +82,7 @@ const endScreen = [
   "/UI/screen/end/0.png",
   "/UI/screen/end/1.png",
   "/UI/screen/end/2.png",
+  "/UI/screen/end/3.png",
 ];
 const screenOn = ref(false);
 
@@ -150,7 +152,9 @@ const disappear = (target, num) => {
 };
 //決定事項
 const getTreasure = (num) => {
-  ElMessage.success("获得锦囊");
+  donePanelOn(3)
+
+  // ElMessage.success("获得锦囊");
   store.commit("treasures");
   store.dispatch("setProcess", 19 + store.state.datas.treasures);
   //收集回调
@@ -381,6 +385,7 @@ const messageDone = ref(false);
 watchEffect(() => {
   console.log("challengeDone", challengeDone.value);
   console.log("messageDone", messageDone.value);
+  
   if (challengeDone.value && messageDone.value) {
     console.log("pass");
     setTimeout(() => {
@@ -388,6 +393,20 @@ watchEffect(() => {
     }, 1000);
   }
 });
+
+watchEffect(()=>{
+  if(store.state.datas.news == 4 && store.state.datas.npcs == 8 && store.state.datas.treasures == 4){
+    // console.log("-----------------------------");
+    // console.log("3");
+    // console.log("-----------------------------");
+    rewardOn.value = true
+    reward.value = 3
+    store.commit('REWARD',3)
+    setTimeout(() => {
+      rewardOn.value = false
+    }, 2500);
+  }
+})
 
 //propaganda
 // #region
@@ -429,10 +448,25 @@ const oooo = (event) => {
 };
 // #endregion
 
+const doneNum = ref(-1)
+const doneOn = ref(false)
+const donePanelOn = (num)=>{
+  doneNum.value = num
+ setTimeout(() => {
+  // if(activatedNews.size == 4) return
+  doneOn.value = true
+ }, 1000);
+}
+
+
 //bus
 onMounted(() => {
   //视角问题
   resetView();
+
+  emitter.on('doneOff',()=>{
+    doneOn.value = false
+  })
 
   emitter.on("mazeStart", () => {
     setTimeout(() => {
@@ -491,7 +525,8 @@ onMounted(() => {
   emitter.on("success", () => {
     messageCount.value++;
     phoneOn.value = false;
-    ElMessage.success("防范成功");
+    // ElMessage.success("防范成功");
+    donePanelOn(4)
   });
 
   //challenge
@@ -499,7 +534,8 @@ onMounted(() => {
     store.commit("challenges");
 
     if (pass) {
-      ElMessage.success("挑战成功");
+      // ElMessage.success("挑战成功");
+      donePanelOn(5)
       challengeCount.value++;
       //移除狗
       //清除狗回调
@@ -515,6 +551,13 @@ onMounted(() => {
       if (challengeCount.value == 3) {
         challenge3.value.onEnter = undefined;
         dog = dog3.value;
+
+        // rewardOn.value = true
+        // store.dispatch('REWARD',4)
+        // reward.value = 4
+        // setTimeout(() => {
+        //   rewardOn.value = false
+        // }, 2500);
       }
       dog.outline = false;
       dog.opacityFactor = 0;
@@ -538,6 +581,11 @@ onMounted(() => {
     startScreenOn.value = false;
     setTimeout(() => {
       active.value = false;
+      processPanel.value = true
+      setTimeout(() => {
+        processPanel.value = false
+        active.value = true
+      }, 4000);
     }, 1200);
     // setTimeout(() => {
     //   router.replace({name:'main'})
@@ -564,6 +612,8 @@ onMounted(() => {
   });
 });
 onBeforeUnmount(() => {
+  emitter.off("doneOff")
+
   emitter.off("mazeStart");
   emitter.off("thebook");
   emitter.off("thephone");
@@ -589,6 +639,13 @@ const chect = ()=>{
       screenOn.value = true;
     }, 1000);
 }
+
+const processPanel = ref(false)
+
+const rewardOn = ref(false)
+const reward = ref(-1)
+
+
 </script>
 
 <template>
@@ -1298,13 +1355,13 @@ const chect = ()=>{
   >
     dream
   </button> -->
-  <button
+  <!-- <button
     class="test"
     @click="chect"
     style="position: absolute; right: 0; top: 300px; color: #fff; z-index: 1001"
   >
     Ending
-  </button>
+  </button> -->
 
   <div style="position: absolute; z-index: -1; left: -50px">
     <img src="/UI/defence/treasure1.png" />
@@ -1312,6 +1369,21 @@ const chect = ()=>{
     <img src="/UI/defence/treasure3.png" />
     <img src="/UI/defence/treasure4.png" />
   </div>
+
+    <!-- Process -->
+  <transition name="p">
+    <Process v-if="processPanel" :process='3'/>
+  </transition>
+
+  <!-- Reward -->
+  <transition name="r">
+    <Reward v-if="rewardOn" :reward="reward"  key="2"/>
+  </transition>
+
+    <!-- Done -->
+    <transition name="r">
+    <Done v-if="doneOn" :doneNum="doneNum"/>
+  </transition>
 </template>
 
 <style lang="less" scoped>
@@ -1321,10 +1393,13 @@ const chect = ()=>{
   left: 0;
   height: 100vh;
   width: 100vw;
-  background-color: rgba(0, 0, 0, 0.494);
+  // background-color: rgba(0, 0, 0, 0.494);
   z-index: 1000;
   transition: all 1.5s ease;
   opacity: 1;
+  background-image: url(/UI/screen/end/0.png);
+  background-size: 100% 100%;
+  background-repeat: no-repeat;
 }
 
 .dream-enter-from {
@@ -1466,5 +1541,34 @@ const chect = ()=>{
     top: 0;
     opacity: 1;
   }
+}
+
+.p-enter-active,
+
+.p-leave-active{
+  transition: all 0.8s linear;
+}
+.p-enter-from,
+.p-leave-to{
+    opacity: 0;
+}
+.p-leave-from,
+.p-enter-to{
+    opacity: 1;
+}
+
+.r-enter-active,
+.r-leave-active{
+  transition: all 0.8s cubic-bezier(.87,-0.28,.13,1.27);
+}
+.r-enter-from,
+.r-leave-to{
+    // top: 100vh;
+    transform: translate(0, 100vh);
+}
+.r-leave-from,
+.r-enter-to{
+    // top: 0;
+    transform: translate(0, 0vh);
 }
 </style>

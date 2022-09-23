@@ -2,6 +2,7 @@ import { createApp } from 'vue'
 import { createRouter, createWebHashHistory } from "vue-router";
 import App from './App.vue'
 import './index.css'
+import './swiper.min.css'
 import 'swiper/dist/css/swiper.min.css'
 //element-plus
 import ElementPlus from 'element-plus'
@@ -12,6 +13,11 @@ import store from "./store";
 import { routes } from "./router/router"
 
 import 'animate.css';
+
+import Reward from './components/Reward.vue'
+import Done from './components/Done.vue'
+import NotePanel from './components/NotePanel.vue'
+import Report from './components/Report.vue'
 
 const router = createRouter({
     history: createWebHashHistory(),
@@ -36,6 +42,10 @@ app.use(ElementPlus)
 app.use(store)
 app.use(router)
 app.mount('#app')
+app.component(Reward);
+app.component(Done);
+app.component(NotePanel);
+app.component(Report);
 
 // window.addEventListener('scroll',()=>{
 //     console.log("main.ts"); 

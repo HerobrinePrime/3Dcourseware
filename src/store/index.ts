@@ -17,6 +17,8 @@ export default createStore({
             solved:0,
         },
 
+        rewards:[],
+
         context:[
             // 0
             [
@@ -275,8 +277,10 @@ export default createStore({
                 method: 'POST'
             })
             if (res.data.code == 400) {
-                //教师
+                // 教师
                 location.href = '/management/'
+                // location.href = 'http://localhost:8080/management/#/studentList'
+                
             }
 
 
@@ -374,6 +378,9 @@ export default createStore({
         QUESTIONS(state, data) {
             state.questions = new Map(data)
             console.log(state.questions);
+        },
+        REWARD(state,reward){
+            state.rewards.push(reward)
         },
 
         news(state,activedNewsSize) {

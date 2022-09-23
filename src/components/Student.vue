@@ -10,35 +10,61 @@
       </div>
       <!-- <div class="line" style="width:100%"></div> -->
     </div>
+
+    <div class="reward" ref="swiper">
+      
+      <div class="swiper-wrapper">
+        <div class="swiper-slide">
+          <div class="con">
+            <img src="/UI/rewardsIcon/1.png" :class='{filted: rewards.indexOf(1) == -1}' />
+            <div class="tit">防诈能手</div>
+          </div>
+        </div>
+        <div class="swiper-slide">
+          <div class="con">
+            <img src="/UI/rewardsIcon/2.png" :class='{filted: rewards.indexOf(2) == -1}' />
+            <div class="tit">反诈能手</div>
+          </div>
+        </div>
+        <div class="swiper-slide">
+          <div class="con">
+            <img src="/UI/rewardsIcon/3.png" :class='{filted: rewards.indexOf(3) == -1}' />
+            <div class="tit">收集者</div>
+          </div>
+        </div>
+        <div class="swiper-slide">
+          <div class="con">
+            <img src="/UI/rewardsIcon/4.png" :class='{filted: rewards.indexOf(4) == -1}' />
+            <div class="tit">答题能手</div>
+          </div>
+        </div>
+      </div>
+      <!-- 如果需要分页器 -->
+      <!-- <div class="swiper-pagination"></div> -->
+
+      <!-- 如果需要导航按钮 -->
+      <div class="swiper-button-prev"></div>
+      <div class="swiper-button-next"></div>
+
+      <div class="title">
+        成就
+      </div>
+    </div>
+
     <div class="datas">
       <div class="process">
         <div class="con"><span>学习进度</span></div>
         <div class="cir">
           <div class="load-box">
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              viewBox="0 0 46 46"
-              class="base"
-            >
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 46 46" class="base">
               <circle class="a" cx="23" cy="23" r="17" />
             </svg>
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              viewBox="0 0 46 46"
-              class="loader"
-              :style="{
-                strokeDashoffset: `calc(-2 * 3.1416 * 20 * (1 - ${
-                  progress / 100
-                }))`,
-              }"
-            >
-              <circle
-                class="a"
-                cx="23"
-                cy="23"
-                r="17"
-                style="stroke: #c6cfff"
-              />
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 46 46" class="loader" :style="{
+              strokeDashoffset: `calc(-2 * 3.1416 * 20 * (1 - ${
+                progress / 100
+              }))`,
+            }">
+              <circle class="a" cx="23" cy="23" r="17" style="stroke: #c6cfff" />
             </svg>
           </div>
           <div class="moji">{{ progress }}%</div>
@@ -48,30 +74,15 @@
         <div class="con"><span>正确率</span></div>
         <div class="cir">
           <div class="load-box">
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              viewBox="0 0 46 46"
-              class="base"
-            >
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 46 46" class="base">
               <circle class="a" cx="23" cy="23" r="17" />
             </svg>
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              viewBox="0 0 46 46"
-              class="loader"
-              :style="{
-                strokeDashoffset: `calc(-2 * 3.1416 * 20 * (1 - ${
-                  rate / 100
-                }))`,
-              }"
-            >
-              <circle
-                class="a"
-                cx="23"
-                cy="23"
-                r="17"
-                style="stroke: #e8d3ff"
-              />
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 46 46" class="loader" :style="{
+              strokeDashoffset: `calc(-2 * 3.1416 * 20 * (1 - ${
+                rate / 100
+              }))`,
+            }">
+              <circle class="a" cx="23" cy="23" r="17" style="stroke: #e8d3ff" />
             </svg>
           </div>
           <div class="moji">{{ rate }}%</div>
@@ -89,15 +100,11 @@
       <div class="title">教师反馈</div>
       <div class="tags">
         <span class="strengthen">需加强类型：</span>
-        <el-tag
-          :key="tag"
-          v-for="tag in studentInfo?._doc?.teacher_feedback_types"
-          color="#fdfaff"
-          :disable-transitions="false"
-        >
+        <el-tag :key="tag" v-for="tag in studentInfo?._doc?.teacher_feedback_types" color="#fdfaff"
+          :disable-transitions="false">
           {{ types[tag].name }}
         </el-tag>
-       
+
       </div>
       <div class="content" :class="reject">
         {{studentInfo?._doc?.teacher_feedback}}
@@ -116,15 +123,15 @@ import theme from "../theme.json";
 echarts.registerTheme("theme", theme);
 
 import { ElLoading } from "element-plus";
-import {defineProps} from 'vue'
-
+import { defineProps } from 'vue'
+import Swiper from "swiper";
 export default {
   data() {
     return {
       // progress: 0,
       types: [],
       studentInfo: {},
- 
+
 
       reject: false,
       sending: false,
@@ -134,6 +141,8 @@ export default {
 
       loading: true,
 
+
+
       // loadingInstance:ElLoading.service({
       //   target:'.main',
       //   body:true,
@@ -142,6 +151,10 @@ export default {
   },
   props: ["id"],
   computed: {
+    rewards() {
+      return this.$store.state.rewards
+    },
+
     progress() {
       console.log("process");
       if (this.studentInfo.process) {
@@ -210,7 +223,7 @@ export default {
         // this.loadingInstance.close()
         // this.loadingInstance.close();
         setTimeout(() => {
-          
+
           this.$nextTick(() => {
             const chart1 = echarts.init(this.$refs.chart1, "theme");
             const chart3 = echarts.init(this.$refs.chart3, "theme");
@@ -229,7 +242,7 @@ export default {
                 },
               },
               legend: {
-                data: ["错误数", "Income"],
+                data: ["错误数", "正确数"],
               },
               grid: {
                 left: "3%",
@@ -248,12 +261,12 @@ export default {
                   axisTick: {
                     show: false,
                   },
-                  data: ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"],
+                  data: ["日", "一", "二", "三", "四", "五", "六"],
                 },
               ],
               series: [
                 {
-                  name: "Income",
+                  name: "正确数",
                   type: "bar",
                   stack: "Total",
                   label: {
@@ -315,7 +328,7 @@ export default {
 
             chart3.setOption({
               title: {
-                text: "Stacked Line",
+                text: "分数变化",
               },
               tooltip: {
                 trigger: "axis",
@@ -337,7 +350,7 @@ export default {
               xAxis: {
                 type: "category",
                 boundaryGap: false,
-                data: ["Sun", "Tue", "Wed", "Thu", "Fri", "Sat", "Mon"],
+                data: ["日", "二", "三", "四", "五", "六", "一"],
               },
               yAxis: {
                 type: "value",
@@ -360,7 +373,30 @@ export default {
   },
   mounted() {
     console.log("***********")
-    console.log(this.id);
+    console.log(this.$store);
+
+    const mySwiper = new Swiper(this.$refs.swiper, {
+      // autoplay: {
+      //   delay: 1000,
+      //   stopOnLastSlide: false,
+      //   disableOnInteraction: true,
+      // },
+      loop: true,
+      // pagination: {
+      //   el: ".swiper-pagination",
+      // },
+      slidesPerView: 1,
+      navigation: {
+        nextEl: ".swiper-button-next",
+        prevEl: ".swiper-button-prev",
+      },
+    });
+    mySwiper.el.onmouseover = function () {
+      // mySwiper.autoplay.stop();
+    };
+    mySwiper.el.onmouseout = function () {
+      // mySwiper.autoplay.start();
+    };
 
     const res = request({
       url: "/student/getWeekStatus",
@@ -410,11 +446,13 @@ export default {
     -webkit-appearance: none;
     height: 500px;
   }
+
   &::-webkit-scrollbar-track {
     -webkit-appearance: none;
     background-color: transparent;
     height: 500px;
   }
+
   &::-webkit-scrollbar {
     // -webkit-appearance: none;
     width: 5px;
@@ -424,12 +462,14 @@ export default {
     align-items: center;
     border-radius: 2.5px;
   }
+
   &::-webkit-scrollbar-thumb {
     -webkit-appearance: none;
     width: 2px;
     height: 8px;
     background-color: rgba(191, 191, 191, 0.485);
   }
+
   /* text-align: center; */
   color: #2c3e50;
 
@@ -452,20 +492,24 @@ export default {
   display: flex;
   justify-content: space-between;
   flex-wrap: wrap;
-  & > div {
+
+  &>div {
     margin-top: 20px;
     box-shadow: 0 5px 10px 0 rgb(50 50 93 / 35%);
   }
+
   .back-banner {
     height: 35px;
     width: 100%;
     margin-top: 0;
     box-shadow: none;
+
     i {
       font-size: 25px;
       cursor: pointer;
     }
   }
+
   .banner {
     position: relative;
     top: -20px;
@@ -477,6 +521,7 @@ export default {
     display: flex;
     justify-content: flex-start;
     align-items: center;
+
     // padding-left: 30px;
     // box-shadow: 0 0 10px 1px rgba(158, 158, 158, 0.482);
     // border-bottom: 1px solid #a1a1a1;
@@ -485,10 +530,12 @@ export default {
       align-items: baseline;
       color: #4f4c4c;
       height: 100%;
+
       div {
         height: 100%;
         line-height: 40px;
       }
+
       .name {
         margin-left: 20px;
         margin-right: 15px;
@@ -505,11 +552,13 @@ export default {
         // border-radius: 10px;
         // color: #8c8c8e;
       }
+
       .num {
         display: inline-block;
         font-size: 14px;
       }
     }
+
     .icon {
       height: 60px;
       width: 60px;
@@ -517,12 +566,31 @@ export default {
       border-radius: 10px;
       overflow: hidden;
       box-shadow: 0 0 15px 2px rgb(158, 158, 158);
+
       img {
         display: 100%;
         height: 100%;
         width: 100%;
         border-radius: 10px;
       }
+    }
+  }
+
+  .reward {
+    width: 100%;
+    height: 400px;
+    position: relative;
+    border-radius: 10px;
+    .title{
+      height: 25px;
+    width: 70px;
+    position: absolute;
+    z-index: 25;
+    top: 5px;
+    left: 16px;
+    font-size: 20px;
+    font-weight: bold;
+    color: #666666;
     }
   }
 
@@ -534,6 +602,7 @@ export default {
     justify-content: space-between;
     border-radius: 10px;
     box-shadow: none;
+
     .process {
       position: relative;
       height: 45%;
@@ -542,22 +611,26 @@ export default {
       box-shadow: 0 5px 10px 0 rgb(50 50 93 / 35%);
       border-radius: 10px;
       display: flex;
+
       .con {
         height: 100%;
         flex: 4;
         display: flex;
         align-items: center;
         justify-content: center;
+
         span {
           font-size: 22px;
           color: #666666;
           font-weight: bold;
         }
       }
+
       .cir {
         height: 100%;
         flex: 5;
         position: relative;
+
         .moji {
           height: 40px;
           // width: 45px;
@@ -571,6 +644,7 @@ export default {
           line-height: 40px;
           font-size: 30px;
         }
+
         .load-box {
           height: 200px;
           max-width: 170px;
@@ -582,6 +656,7 @@ export default {
           left: 0;
           bottom: 0;
           margin: auto;
+
           svg {
             position: absolute;
             top: 0;
@@ -589,6 +664,7 @@ export default {
             margin: auto 0;
             overflow: hidden;
             backface-visibility: hidden;
+
             circle {
               overflow: hidden;
               transition: all 0.2s ease;
@@ -600,24 +676,29 @@ export default {
               transition: stroke 1.1s ease;
             }
           }
+
           .base {
             opacity: 0.5;
+
             circle {
               stroke: #eeeef0bc;
             }
           }
+
           .loader {
             opacity: 1;
             stroke-dasharray: calc(2 * 3.1416 * 20);
             transform: rotateZ(-90deg) rotateX(0deg);
             animation-fill-mode: both;
             transition: stroke-dashoffset 1s ease 0.5s;
+
             circle {
               stroke: #f7c5ff;
               // stroke-width: 3px;
             }
           }
         }
+
         animation: enter 1s ease forwards;
       }
     }
@@ -630,6 +711,7 @@ export default {
     border-radius: 20px;
     overflow: hidden;
     box-shadow: 0px 0px 10px 2px rgb(223, 223, 223);
+
     .title {
       height: 70px;
       width: 100%;
@@ -639,16 +721,20 @@ export default {
       padding: 0 20px;
       font-weight: bolder;
       font-size: larger;
+
       i {
         cursor: pointer;
+
         &::before {
           color: #b6b7e9;
         }
       }
     }
+
     .tags {
       padding: 10px 5px;
       padding-left: 18px;
+
       // border-bottom: 1px solid rgb(207, 207, 207);
       // border-bottom: 1px solid rgb(207, 207, 207);
       .strengthen {
@@ -656,9 +742,11 @@ export default {
         font-size: 15px;
         color: #666666;
       }
+
       .el-tag {
         margin: 0 5px;
       }
+
       .button-new-tag {
         margin-left: 10px;
         height: 32px;
@@ -666,19 +754,23 @@ export default {
         padding-top: 0;
         padding-bottom: 0;
       }
+
       .input-new-tag {
         width: 90px;
         margin-left: 10px;
         vertical-align: bottom;
       }
+
       .el-dropdown-link {
         cursor: pointer;
         color: #409eff;
       }
+
       .el-icon-arrow-down {
         font-size: 12px;
       }
     }
+
     .content {
       // height: 35vh;
       width: 100%;
@@ -687,18 +779,21 @@ export default {
       display: flex;
       padding: 10px 20px;
       box-sizing: border-box;
+
       .select {
         height: 100%;
         width: 32%;
         display: flex;
         flex-direction: column;
       }
+
       .input {
         height: 100%;
         position: relative;
         // background-color: #f7c5ff;
       }
     }
+
     .button-container {
       margin: 0 auto 0px;
       padding: 10px 0px;
@@ -709,6 +804,7 @@ export default {
       text-align: center;
     }
   }
+
   .barChart {
     height: 380px;
     width: 50%;
@@ -717,6 +813,7 @@ export default {
     position: relative;
     // margin:0 auto;
   }
+
   .radarChart {
     height: 600px;
     width: 100%;
@@ -725,6 +822,7 @@ export default {
     padding: 30px;
     box-sizing: border-box;
   }
+
   .lineChart {
     height: 400px;
     width: 100%;
@@ -732,9 +830,11 @@ export default {
     border-radius: 20px;
   }
 }
+
 .reject textarea {
   border-color: #d94646 !important;
 }
+
 .reject::after {
   content: "请填写反馈信息";
   color: #d94646;
@@ -744,5 +844,34 @@ export default {
   position: absolute;
   bottom: -5px;
   left: 25px;
+}
+
+.swiper-slide {
+  display: flex;
+  justify-content: center;
+  .con{
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    height: 100%;
+    img {
+      height: 60%;
+      display: block;
+      // transform: scale(1.1);
+      margin-bottom: 20px;
+    }
+    .tit{
+      font-family: 'xknlt';
+      font-size: 35px;
+      color: #666666;
+    }
+  }
+
+
+}
+
+.filted {
+  filter: grayscale(1);
 }
 </style>

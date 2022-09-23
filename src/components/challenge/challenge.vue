@@ -14,7 +14,7 @@ import { request } from "../../request";
 
 const alpha = reactive(["A", "B", "C", "D"]);
 
-const props = defineProps(["model"]);
+const props = defineProps(["model","exe"]);
 
 const challengeOn = ref(false);
 const model = ref(0); //0简单模式,1困难模式
@@ -94,6 +94,13 @@ const commit = () => {
 const clear = () => {
   selected.length = 0;
 };
+
+
+const exePanel = ref(false)
+const exeRight = ref(0)
+const exeWrong = ref(0)
+
+
 let rightWrongTimer = {};
 const catImg = ref("/UI/challenge/good.png");
 const dogImg = ref("/UI/challenge/bad.png");
@@ -103,6 +110,8 @@ const catThrowEgg = ref(false);
 const dogThrowEgg = ref(false);
 const bannerOn = ref(false);
 const right = async () => {
+  exeRight.value ++
+
   clearTimeout(rightWrongTimer);
   boss.remain--;
 
@@ -143,6 +152,8 @@ const right = async () => {
   // console.log(res);
 };
 const wrong = async () => {
+  exeWrong.value ++
+
   clearTimeout(rightWrongTimer);
   self.remain--;
 
@@ -190,6 +201,9 @@ watch(challengeOn, (newValue) => {
     start();
   } else {
     console.log("turn off");
+    if(props.model == 1){
+      emitter.emit('ques')
+    }
     clearInterval(timer);
     inRound.value = false;
     question.question = {};
@@ -224,28 +238,57 @@ const round = () => {
   getQuestion();
   countStart();
 };
+
 const detection = () => {
   //1500
   bannerOn.value = false;
 
   clear();
   if (boss.remain == 0) {
+    
     //pass
     console.log("pass");
     if (model.value == 0) {
-      challengeOn.value = false;
-      emitter.emit("challengeDone", true);
+      // challengeOn.value = false;
+      if(props.exe){
+        exePanel.value = true
+
+        setTimeout(()=>{
+          emitter.emit("challengeDone", true);
+          challengeOn.value = false;
+        },4000)
+      }
+      else{
+        emitter.emit("challengeDone", true);
+        challengeOn.value = false;
+      }
       return;
     } else {
       rank.value++;
-      if (rank.value == 3) rank.value = 0;
+      if (rank.value == 3) {
+        rank.value = 0;
+      }
       start();
     }
+
   } else if (self.remain == 0) {
+
     //die
     console.log("die");
-    challengeOn.value = false;
-    emitter.emit("challengeDone", false);
+    // challengeOn.value = false;
+    if(props.exe){
+      exePanel.value = true
+
+      setTimeout(()=>{
+        emitter.emit("challengeDone", false);
+        challengeOn.value = false;
+      },4000)
+    }
+    else{
+      emitter.emit("challengeDone", false);
+      challengeOn.value = false;
+    }
+
   } else {
     //new round
     round();
@@ -281,6 +324,7 @@ const getQuestion = () => {
 //emitter
 onMounted(() => {
   //challengeSwitch
+  console.log("onoonononn")
   emitter.on("challenge", () => {
     challengeOn.value = !challengeOn.value;
   });
@@ -298,7 +342,7 @@ onBeforeUnmount(() => {
     <div class="challenge" v-if="challengeOn">
       <i
         class="iconfont icon-xiangzuo1"
-        v-if="model == 1"
+        v-if="props.model == 1"
         @click="challengeOn = false"
       ></i>
       <!-- {{question.question}} -->
@@ -403,6 +447,16 @@ onBeforeUnmount(() => {
       <div class="egg" :class="{ eggfly: catThrowEgg, eggfly2: dogThrowEgg }">
         <img src="/UI/challenge/egg.png" />
       </div>
+
+      <div class="exe" v-if="exePanel">
+        <img class="key" src="/UI/commonpanel/key.png">
+        <img class="star1" src="/UI/commonpanel/star1.png">
+        <img class="star2" src="/UI/commonpanel/star2.png">
+
+        <div class="content1">你本次一共作答{{exeRight + exeWrong}}道题</div>
+        <div class="content2">其中正确{{exeRight}}道</div>
+        <div class="content3">正确率为{{Math.ceil(exeRight * 100 / (exeRight + exeWrong))}}%</div>
+      </div>
     </div>
   </transition>
 </template>
@@ -426,6 +480,63 @@ onBeforeUnmount(() => {
   background-repeat: no-repeat;
   background-size: 100% 100%;
   padding: 5.5vh 5.7%;
+
+  .exe{
+
+    &>img{
+        position: absolute;
+        z-index: 0;
+    }
+    .key{
+      transform: scale(0.8);
+      top: 84px;
+      left: 51px;
+    }
+    .star1{
+      right: 39px;
+    top: 62px;
+    transform: scale(0.8);
+    }
+    .star2{
+        
+    bottom: 43px;
+    right: 160px;
+    transform: scale(0.8);
+    }
+
+    position: absolute;
+    height: 52%;
+    z-index: 2001;
+    width: 40%;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    margin: auto;
+    border-radius: 40px;
+    background-color: #ffead9;
+    border: 4px solid #fff;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    animation: exe 0.8s ease forwards;
+    &>div{
+      font-family: 'xknlt';
+    font-size: 40px;
+    position: relative;
+    z-index: 41;
+    }
+  }
+  @keyframes exe {
+      from{
+        opacity: 0;
+      }
+      to{
+        opacity: 1;
+      }
+  }
+
   .iconfont {
     font-size: 25px;
     cursor: pointer;

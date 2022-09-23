@@ -16,7 +16,7 @@
                 v-for="(end,index) in ends[count]"
                 :key="end"
                 :class="{ pos: start,intoEnd:!start }"
-                :style="{'transition-delay':`${pubDelay + index * 1.2}s`}"
+                :style="{'transition-delay':`${pubDelay}s`}"
               >
                 {{ end }}
               </div>
@@ -41,7 +41,7 @@ import { nextTick, onMounted, Transition, watch, ref, reactive } from "vue";
 import Swiper from "swiper";
 import emitter from "../eventBus";
 
-const pubDelay = ref(1);
+const pubDelay = ref(0.5);
 
 const count = ref(0);
 const ends = reactive([
@@ -67,6 +67,11 @@ const ends = reactive([
     "带着你的知识和经验",
     "把防诈骗的意识带给他们",
     "一起努力，世界就会更好",
+  ],
+  [
+    "网络一线牵，是非难分辨",
+    "防诈反诈长存于心",
+    "擦亮双眼明辨善恶",
   ],
 ]);
 

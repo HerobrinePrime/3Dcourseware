@@ -60,6 +60,8 @@ const toMain = () => {
   src: url(/fonts/xknlt.ttf);
 }
 .report {
+  
+
   height: 70vh;
   width: 50vw;
   position: absolute;
@@ -71,7 +73,7 @@ const toMain = () => {
   left: 0;
   margin: auto;
   text-align: center;
-  color: rgb(248, 248, 248);
+  color: #716566;
   display: flex;
   flex-direction: column;
   div {
@@ -133,7 +135,7 @@ const toMain = () => {
       top: 25px;
       z-index: 1;
       font-weight: bold;
-      color: #eff9ff;
+      color: #716566;
     }
     .kansei {
       height: 86px;
@@ -148,7 +150,8 @@ const toMain = () => {
 .to-main {
   height: 100vh;
   width: 100vw;
-  background-color: #000;
+  // background-color: #000;
+  
   transition: all 0.8s ease;
   opacity: 1;
   position: absolute;

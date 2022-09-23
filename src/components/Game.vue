@@ -49,6 +49,7 @@ import News from "./main/news.vue";
 import Phone from "./main/phone.vue";
 import Screen from "./Screen.vue";
 import SelectPanel from "./SelectPanel.vue";
+import Process from './Process.vue'
 
 //element-plus
 // import {} from "element-plus";
@@ -96,7 +97,11 @@ import {
 import { changeScene } from "../hooks/sceneController.js";
 import { useStore,mapState } from "vuex";
 import emitter from "../eventBus.js";
+
+import Challenge from "./challenge/challenge.vue";
 //#endregion
+
+const processPanel = ref(false)
 
 //fov control
 window.onmousewheel = (e)=>{
@@ -424,6 +429,16 @@ const exitIntersect = (e) => {
 
   setTimeout(()=>{
     if (activatedNews.size == 4) {
+
+      if(store.state.rewards.indexOf(1) == -1){
+        rewardOn.value = true
+        store.commit('REWARD',1)
+        reward.value = 1
+        setTimeout(() => {
+          rewardOn.value = false
+        }, 2500);
+      }
+
       //teleport
       orbitCamera.autoRotate = false
       const hito = person.value
@@ -505,29 +520,73 @@ const spriteClick = (e)=>{
 }
 
 const Maze = ()=>{
-    changeView()
-    const sprite = theSprite.value
-    bright.value = true
-    sprite.onLoop = ()=>{
-      sprite.scale += 0.3
-      sprite.width += 0.3
-      if(sprite.scale >= 30) {
-        sprite.onLoop = undefined
-        fade.value = true
-        setTimeout(()=>{
-          toMaze()
-        },2500)
-      }
+  changeView()
+  const sprite = theSprite.value
+  bright.value = true
+  sprite.onLoop = ()=>{
+    sprite.scale += 0.3
+    sprite.width += 0.3
+    if(sprite.scale >= 30) {
+      sprite.onLoop = undefined
+      fade.value = true
+      setTimeout(()=>{
+        // toMaze()
+        endNotePanelOn.value = true
+      },2500)
     }
   }
+}
+
+const endNotePanelOn = ref(false)
+const endSS = ref(false)
+
+const doneNum = ref(1)
+const doneOn = ref(false)
+const donePanelOn = ()=>{
+  doneNum.value = 1
+ setTimeout(() => {
+  if(activatedNews.size == 4) return
+  doneOn.value = true
+ }, 1000);
+}
 
 //bag事件总线
 //#region
 onMounted(() => {
+  emitter.on('doneOff',()=>{
+    doneOn.value = false
+  })
+  emitter.on("noteOFf",()=>{
+    endNotePanelOn.value = false
+    console.log("challenge");
+    endSS.value = true
+    setTimeout(() => {
+      emitter.emit("challenge");
+    }, 800);
+  })
+  emitter.on("challengeDone",()=>{
+    //挑战完成
+    setTimeout(() => {
+      toMaze()
+    }, 800);
+  })
+
   // loginEnd.value = true
   if(localStorage.getItem('token')){
     store.dispatch("testToken")
   }
+
+  emitter.on('ques',()=>{
+    if(store.state.rewards.indexOf(4) == -1){
+      rewardOn.value = true
+      store.commit('REWARD',4)
+      reward.value = 4
+      setTimeout(() => {
+        rewardOn.value = false
+      }, 2500);
+    }
+    
+  })
 
   emitter.on("*", () => {
     // console.log("******");
@@ -549,6 +608,11 @@ onMounted(() => {
     screenOn.value = false;
     setTimeout(()=>{
       active.value = false
+      processPanel.value = true
+      setTimeout(() => {
+        processPanel.value = false
+        active.value = true
+      }, 4000);
     },1200)
   });
   emitter.on("selectOff", () => {
@@ -561,12 +625,18 @@ onMounted(() => {
 });
 onBeforeUnmount(() => {
   emitter.off('*')
+  emitter.off('ques');
   emitter.off("thebook");
   emitter.off("thephone");
   emitter.off("screenOff");
   emitter.off("selectOff");
+  emitter.off('doneOff');
+  emitter.off("noteOFf")
 });
 //#endregion
+
+const rewardOn = ref(false)
+const reward = ref(-1)
 </script>
 
 <template>
@@ -896,10 +966,10 @@ onBeforeUnmount(() => {
   </button> -->
   <!-- <button
     class="test"
-    @click="emitter.emit('unlock')"
+    @click="processPanel = !processPanel"
     style="position: absolute; z-index: 500; right: 0; top: 220px; color: #fff"
   >
-    Unlock
+  processPanel
   </button> -->
   <!-- 学生信息 -->
   <States :active="active" :screenOnInStatus="screenOnInStatus"/>
@@ -951,7 +1021,10 @@ onBeforeUnmount(() => {
       </div>
       <img class="fro" src="/UI/book/fro.png" />
       <img class="claw" src="/UI/book/claw.png" />
-      <img class="close" src="/UI/book/close.png" @click="exitIntersect" />
+      <img class="close" src="/UI/book/close.png" @click="function(){
+        exitIntersect()
+        donePanelOn()
+      }" />
       <!-- 1 -->
       <transition name="el-fade-in-linear">
         <div
@@ -1610,7 +1683,30 @@ onBeforeUnmount(() => {
   <Screen :screens="screens" :screenOn="screenOn" />
 
   <!-- SelectPanel -->
-  <SelectPanel :selectPanelOn="selectPanelOn" />
+  <SelectPanel :selectPanelOn="selectPanelOn" v-if="!endSS"/>
+
+  <!-- Process -->
+  <transition name="p">
+    <Process v-if="processPanel" :process='1'/>
+  </transition>
+
+  <!-- Reward -->
+  <transition name="r">
+    <Reward v-if="rewardOn" :reward="reward" key="0"/>
+  </transition>
+
+  <!-- Done -->
+  <transition name="r">
+    <Done v-if="doneOn" :doneNum="doneNum" :newsCount="activatedNews.size"/>
+  </transition>
+
+  <!-- endNotePanelOn NotePanel -->
+  <transition name="p">
+    <NotePanel v-if="endNotePanelOn" :endCount="1"/>
+  </transition>
+
+  <!-- Challenge -->
+  <Challenge v-if="endSS" :exe="true"/>
 </template>
 
 <style lang="less" scoped>
@@ -1624,6 +1720,19 @@ onBeforeUnmount(() => {
 //   font-family: hwhp;
 //   src: url('fonts/hwhp.ttf');
 // }
+.p-enter-active,
+
+.p-leave-active{
+  transition: all 0.8s linear;
+}
+.p-enter-from,
+.p-leave-to{
+    opacity: 0;
+}
+.p-leave-from,
+.p-enter-to{
+    opacity: 1;
+}
 
 .load-box {
   height: 160px;
@@ -2311,5 +2420,20 @@ onBeforeUnmount(() => {
 }
 //小屏
 @media (max-width: 768px) {
+}
+
+.r-enter-active,
+.r-leave-active{
+  transition: all 0.8s cubic-bezier(.87,-0.28,.13,1.27);
+}
+.r-enter-from,
+.r-leave-to{
+    // top: 100vh;
+    transform: translate(0, 100vh);
+}
+.r-leave-from,
+.r-enter-to{
+    // top: 0;
+    transform: translate(0, 0vh);
 }
 </style>
